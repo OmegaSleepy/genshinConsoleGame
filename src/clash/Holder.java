@@ -1,18 +1,18 @@
-package genshin;
+package clash;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class Holder {
-    public static List<Char> characters = new ArrayList<>();
+    public static List<Card> characters = new ArrayList<>();
     static {
 
-        for (Field field : Char.class.getDeclaredFields()) {
+        for (Field field : Card.class.getDeclaredFields()) {
             // Only static fields of type Card
-            if (Modifier.isStatic(field.getModifiers()) && field.getType() == Char.class) {
+            if (Modifier.isStatic(field.getModifiers()) && field.getType() == Card.class) {
                 try {
-                    characters.add((Char) field.get(null)); // null because it's static
+                    characters.add((Card) field.get(null)); // null because it's static
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
@@ -20,26 +20,23 @@ public class Holder {
         }
     }
 
-    public static Map<String, Char> nameToCharacter = new HashMap<>();
+    public static Map<String, Card> nameToCharacter = new HashMap<>();
     static {
-        for(Char hero: characters){
-            String heroName = hero.name.toLowerCase();
-            heroName = heroName.replace(" ", "_");
-            nameToCharacter.put(heroName, hero);
-            for (String name : hero.alternativeNames) {
-                name = name.replace(" ", "_");
-                nameToCharacter.put(name.toLowerCase(),hero);
-            }
+        for(Card hero: characters){
+            nameToCharacter.put(hero.name.toLowerCase(), hero);
+//            for (String name : hero.alternativeNames) {
+//                nameToCharacter.put(name.toLowerCase(),hero);
+//            }
         }
     }
 
     static void sortByVersion(){
-        characters.sort(new Comparator<Char>() {
+        characters.sort(new Comparator<Card>() {
             @Override
-            public int compare (Char o1, Char o2) {
-                if(o1.version>o2.version){
+            public int compare (Card o1, Card o2) {
+                if(o1.elixir>o2.elixir){
                     return 1;
-                } if(o1.version<o2.version){
+                } if(o1.elixir<o2.elixir){
                     return -1;
                 }
                 int shorterCount = Math.min(o1.name.length(),o2.name.length());
@@ -56,7 +53,7 @@ public class Holder {
     }
 
     static void printMap(){
-        for(Char g: characters){
+        for(Card g: characters){
             String classNameWithSpaces = g.toString();
             StringBuilder className = new StringBuilder();
 
@@ -79,5 +76,6 @@ public class Holder {
     }
 
     public static void main (String[] args) {
+        printMap();
     }
 }

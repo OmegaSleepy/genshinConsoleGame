@@ -1,109 +1,55 @@
-package genshin;
+package clash;
 
-import genshin.util.Compare;
-import genshin.util.Random;
-import genshin.util.StatHandler;
+import clash.util.Compare;
+import clash.util.Random;
+import clash.util.StatHandler;
 
 import java.util.*;
-
-enum Element {
-    PYRO, CRYO, HYDRO, ELECTRO, GEO, ANEMO, DENTRO
-}
-
-enum Nation {
-    MONSTADT, LIYUE, INAZUMA, SUMERU, FONTAINE, NATLAN, NOD_KRAI, SNEZHNAYA, OUTSIDE
-}
-
-enum Weapon {
-    POLEARM, CLAYMORE, CATALYST, BOW, SWORD
-}
 
 
 public class Game {
     static boolean isHard = true;
 
     static short seed = 67;
-    static List<Element> possibleElements = new ArrayList<>();
 
-    //TODO add a method to find the maxVersion from Holder.characters()
-    static double maxVersion = getMaxVersion();
-    static double minVersion = 1.0;
-    static List<Weapon> possibleWeapons = new ArrayList<>();
-
-    static List<Nation> possibleNations = new ArrayList<>();
-
-    static boolean isFemale;
-    static boolean isFiveStar;
-
+    static List<Card.Rarity> possibleRarity = new ArrayList<>();
+    static List<Card.Type> possibleTypes = new ArrayList<>();
     static boolean isFirstRound = true;
+
+    static int elixirMax = 10;
+    static int elixirMin = 0;
 
     static List<String> nonNames = new ArrayList<>();
 
-    static double getMaxVersion(){
-        double max = 1;
-        for(Char c: Holder.characters){
-            max = Math.max(max,c.version);
-        }
-        return max;
-    }
-
     static void repopulatePossible () {
-        possibleNations.clear();
-        possibleWeapons.clear();
-        possibleElements.clear();
+
         nonNames.clear();
+        possibleRarity.add(Card.Rarity.COMMON);
+        possibleRarity.add(Card.Rarity.RARE);
+        possibleRarity.add(Card.Rarity.EPIC);
+        possibleRarity.add(Card.Rarity.LEGENDARY);
+        possibleRarity.add(Card.Rarity.CHAMPION);
 
-        possibleNations.add(Nation.MONSTADT);
-        possibleNations.add(Nation.LIYUE);
-        possibleNations.add(Nation.SNEZHNAYA);
-        possibleNations.add(Nation.INAZUMA);
-        possibleNations.add(Nation.SUMERU);
-        possibleNations.add(Nation.NATLAN);
-        possibleNations.add(Nation.FONTAINE);
-        possibleNations.add(Nation.NOD_KRAI);
-        possibleNations.add(Nation.OUTSIDE);
+        possibleTypes.add(Card.Type.TROOP);
+        possibleTypes.add(Card.Type.SPELL);
+        possibleTypes.add(Card.Type.BUILDING);
 
-        possibleWeapons.add(Weapon.BOW);
-        possibleWeapons.add(Weapon.CLAYMORE);
-        possibleWeapons.add(Weapon.SWORD);
-        possibleWeapons.add(Weapon.CATALYST);
-        possibleWeapons.add(Weapon.POLEARM);
+        elixirMax = 10;
+        elixirMin = 0;
 
-        isFemale = false;
-        isFiveStar = false;
-
-        isFirstRound = true;
-
-        maxVersion = 6.5;
-        minVersion = 1.0;
-
-        possibleElements.add(Element.DENTRO);
-        possibleElements.add(Element.GEO);
-        possibleElements.add(Element.CRYO);
-        possibleElements.add(Element.PYRO);
-        possibleElements.add(Element.ANEMO);
-        possibleElements.add(Element.ELECTRO);
-        possibleElements.add(Element.HYDRO);
     }
 
-    static Char getRandomCharacter () {
+    static Card getRandomCharacter () {
         seed = (short) ((seed + 1) % Short.MAX_VALUE);
-        new genshin.util.Random(seed);
-        return Holder.characters.get(new genshin.util.Random(seed).getRandomCapped(Holder.characters.size()));
+        return Holder.characters.get(new Random(seed).getRandomCapped(Holder.characters.size()));
     }
 
-    static Char getCharFromString (String name) {
-        name = name.replace(" ", "_");
-        Char guess = Holder.nameToCharacter.get(name.toLowerCase());
-        if(guess.equals(null)){
-            return Char.KACHINA;
-        }
-        return guess;
+    static Card getCharFromString (String name) {
+        return Holder.nameToCharacter.get(name.toLowerCase());
     }
 
     static boolean containsChar (String name) {
         name = name.toLowerCase();
-        name = name.replace(" ", "_");
         return Holder.nameToCharacter.containsKey(name);
     }
 
@@ -123,7 +69,7 @@ public class Game {
         return stringBuilder.toString();
     }
 
-    static Char hiddenCharacter = getRandomCharacter();
+    static Card hiddenCharacter = getRandomCharacter();
 
     static Map<String, String> objectTruthTable = new HashMap<>();
     static Map<String, String> literalTruthTable = new HashMap<>();
@@ -137,56 +83,53 @@ public class Game {
         literalTruthTable.put("lower", "{key} is lower <.");
     }
 
-    static boolean compareCharacterS (Char guess) {
+    static boolean compareCharacterS (Card guess) {
         isFirstRound = false;
 
         if (!Compare.Objects(Game.capitalizeFirstChar(guess.name),
                 Game.capitalizeFirstChar(hiddenCharacter.name), "Name", objectTruthTable)) {
             nonNames.add(guess.name);
         }
-
-        int cmp = Compare.Number(guess.version, hiddenCharacter.version, "Version", literalTruthTable);
+        if(Compare.Objects(guess.rarity,hiddenCharacter.rarity,"Rarity", objectTruthTable)){
+            possibleRarity.clear();
+            possibleRarity.add(guess.rarity);
+        } else{
+            if(possibleRarity.contains(guess.rarity)){
+                possibleRarity.remove(guess.rarity);
+            }
+        }
+        if(Compare.Objects(guess.type,hiddenCharacter.type,"Type", objectTruthTable)){
+            possibleTypes.clear();
+            possibleTypes.add(guess.type);
+        } else{
+            if(possibleTypes.contains(guess.type)){
+                possibleTypes.remove(guess.type);
+            }
+        }
+        int cmp = genshin.util.Compare.Number(guess.elixir, hiddenCharacter.elixir, "elexir", literalTruthTable);
 
         if (cmp == 0) {
             // guess == hidden, clamp both min/max to this exact value
-            minVersion = guess.version;
-            maxVersion = guess.version;
+            elixirMin = guess.elixir;
+            elixirMax = guess.elixir;
         } else if (cmp < 1) {
             // guess < hidden → hidden is higher
-            if (guess.version+0.1 > minVersion) minVersion = guess.version;
+            if (guess.elixir+1 > elixirMin) elixirMin = guess.elixir;
         } else {
             // guess > hidden → hidden is lower
-            if (guess.version-0.1 < maxVersion) maxVersion = guess.version;
-        }
-        minVersion = Math.round(minVersion * 10.0) / 10.0;
-        maxVersion = Math.round(maxVersion * 10.0) / 10.0;
-
-        if (Compare.Objects(guess.weapon, hiddenCharacter.weapon, "Weapon", objectTruthTable)) {
-            possibleWeapons.clear();
-            possibleWeapons.add(guess.weapon);
-        } else {
-            if(possibleWeapons.contains(guess.weapon)){
-                possibleWeapons.remove(guess.weapon);
-            }
+            if (guess.elixir-1 < elixirMax) elixirMax = guess.elixir;
         }
 
-        if (Compare.Objects(guess.element, hiddenCharacter.element, "Element", objectTruthTable)) {
-            possibleElements.clear();
-            possibleElements.add(guess.element);
-        } else {
-            if(possibleElements.contains(guess.element)){
-                possibleElements.remove(guess.element);
-            }
-        }
 
-        if (Compare.Objects(guess.nation, hiddenCharacter.nation, "Nation", objectTruthTable)) {
-            possibleNations.clear();
-            possibleNations.add(guess.nation);
-        } else {
-            if(possibleNations.contains(guess.nation)){
-                possibleNations.remove(guess.nation);
-            }
-        }
+//        if (Compare.Objects(guess.weapon, hiddenCharacter.weapon, "Weapon", objectTruthTable)) {
+//            possibleWeapons.clear();
+//            possibleWeapons.add(guess.weapon);
+//        } else {
+//            if(possibleWeapons.contains(guess.weapon)){
+//                possibleWeapons.remove(guess.weapon);
+//            }
+//        }
+
 
         System.out.println();
         return guess.equals(hiddenCharacter);
@@ -195,58 +138,35 @@ public class Game {
     static void printPossibleCharacters () {
         Holder.sortByVersion();
         System.out.println("<========Help========>");
-        System.out.print("< Possible Weapons: ");
-        for (Weapon weapon : possibleWeapons) {
-            System.out.print(weapon + " ");
+        System.out.print("< Possible Types: ");
+        for (Card.Type type : possibleTypes) {
+            System.out.print(type + " ");
         }
         System.out.println(">\n");
-        System.out.print("< Possible Nations: ");
-        for (Nation nation : possibleNations) {
-            System.out.print(nation + " ");
+        System.out.print("< Possible Rarities: ");
+        for (Card.Rarity rarity : possibleRarity) {
+            System.out.print(rarity + " ");
         }
         System.out.println(">\n");
-        System.out.print("< Possible Elements: ");
-        for (Element element : possibleElements) {
-            System.out.print(element + " ");
-        }
         System.out.print(">\n");
-        System.out.println("< Version range: ( " + minVersion + " < version < " + maxVersion +
+        System.out.println("< Elixir range: ( " + elixirMin + " < elixir < " + elixirMax +
                 " ) >");
 
 
-        if (!isHard) {
-            System.out.print("< Gender - ");
-            if (isFemale) {
-                System.out.print(" 👩 Female");
-            } else {
-                System.out.print(" 👨 Male");
-            }
-            System.out.print(" >\n");
-
-            System.out.print("< Rarity - ");
-            if (isFiveStar) {
-                System.out.print(" 5⭐");
-            } else {
-                System.out.print(" 4⭐");
-            }
-            System.out.print(" >\n");
-
-        }
-
-        int versionStep = -1; // start below any real version
+        int elixirStep = -1; // start below any real version
         System.out.println("\n< Possible characters >");
-        List<Char> possibleChar = new ArrayList<>();
-        for (Char c : Holder.characters) {
+        List<Card> possibleChar = new ArrayList<>();
+        for (Card c : Holder.characters) {
             if (isIsPossible(c)) {
                 possibleChar.add(c);
             }
         }
         System.out.printf("<Total possible %s>\n", possibleChar.size());
-        for (Char c : possibleChar) {
-            int majorVersion = (int) Math.floor(c.version);
-            if (majorVersion > versionStep) {
-                System.out.printf("\n<%d.X>\n", majorVersion);
-                versionStep = majorVersion; // sync with actual version
+        for (Card c : possibleChar) {
+            int elixir = c.elixir;
+            if (elixir > elixirStep) {
+                System.out.printf("\n<%d>\n", elixir);
+                elixirStep = elixir; // sync with actual version
             }
             System.out.printf("<%s>\n", c.name);
         }
@@ -258,69 +178,69 @@ public class Game {
 
     //===SOLVING ALGORITHMS===
 
-    static Char solveSmart () {
-        // collect all possible candidates
-        List<Char> possibleChar = new ArrayList<>();
-        for (Char c : Holder.characters) {
-            if (isIsPossible(c)) {
-                possibleChar.add(c);
-            }
-        }
+//    static Card solveSmart () {
+//        // collect all possible candidates
+//        List<Card> possibleChar = new ArrayList<>();
+//        for (Card c : Holder.characters) {
+//            if (isIsPossible(c)) {
+//                possibleChar.add(c);
+//            }
+//        }
+//
+//        System.out.printf("<Total possible %s>\n", possibleChar.size());
+//
+//        if (possibleChar.isEmpty()) {
+//            // fallback: shouldn’t normally happen
+//            return getRandomCharacter();
+//        }
+//
+//        // if only 1 left, that's the answer
+//        if (possibleChar.size() == 1) {
+//            return possibleChar.getFirst();
+//        }
+//
+//        // First round: aim for middle version (to split search space)
+//        if (isFirstRound) {
+//            double target = (minVersion + maxVersion) / 2.0;
+//            Card best = possibleChar.getFirst();
+//            double bestDiff = Math.abs(best.version - target);
+//            for (Card c : possibleChar) {
+//                double diff = Math.abs(c.version - target);
+//                if (diff < bestDiff) {
+//                    best = c;
+//                    bestDiff = diff;
+//                }
+//            }
+//            return best;
+//        }
+//
+//        // Later rounds: try to maximize version narrowing
+//        double targetMid = (minVersion + maxVersion) / 2.0;
+//        Card best = possibleChar.getFirst();
+//        double bestScore = Double.MAX_VALUE;
+//
+//        for (Card c : possibleChar) {
+//            double diff = Math.abs(c.version - targetMid);
+//
+//            // Add small tie-breakers to encourage diverse exploration
+//            double tieBreaker = 0;
+//            if (possibleElements.size() > 1) tieBreaker += 0.2;
+//            if (possibleWeapons.size() > 1) tieBreaker += 0.1;
+//            if (possibleNations.size() > 1) tieBreaker += 0.05;
+//
+//            double score = diff + tieBreaker;
+//            if (score < bestScore) {
+//                bestScore = score;
+//                best = c;
+//            }
+//        }
+//
+//        return best;
+//    }
 
-        System.out.printf("<Total possible %s>\n", possibleChar.size());
-
-        if (possibleChar.isEmpty()) {
-            // fallback: shouldn’t normally happen
-            return getRandomCharacter();
-        }
-
-        // if only 1 left, that's the answer
-        if (possibleChar.size() == 1) {
-            return possibleChar.getFirst();
-        }
-
-        // First round: aim for middle version (to split search space)
-        if (isFirstRound) {
-            double target = (minVersion + maxVersion) / 2.0;
-            Char best = possibleChar.getFirst();
-            double bestDiff = Math.abs(best.version - target);
-            for (Char c : possibleChar) {
-                double diff = Math.abs(c.version - target);
-                if (diff < bestDiff) {
-                    best = c;
-                    bestDiff = diff;
-                }
-            }
-            return best;
-        }
-
-        // Later rounds: try to maximize version narrowing
-        double targetMid = (minVersion + maxVersion) / 2.0;
-        Char best = possibleChar.getFirst();
-        double bestScore = Double.MAX_VALUE;
-
-        for (Char c : possibleChar) {
-            double diff = Math.abs(c.version - targetMid);
-
-            // Add small tie-breakers to encourage diverse exploration
-            double tieBreaker = 0;
-            if (possibleElements.size() > 1) tieBreaker += 0.2;
-            if (possibleWeapons.size() > 1) tieBreaker += 0.1;
-            if (possibleNations.size() > 1) tieBreaker += 0.05;
-
-            double score = diff + tieBreaker;
-            if (score < bestScore) {
-                bestScore = score;
-                best = c;
-            }
-        }
-
-        return best;
-    }
-
-    static Char solveRandom () {
-        List<Char> possibleChar = new ArrayList<>();
-        for (Char c : Holder.characters) {
+    static Card solveRandom () {
+        List<Card> possibleChar = new ArrayList<>();
+        for (Card c : Holder.characters) {
             if (isIsPossible(c)) {
                 possibleChar.add(c);
             }
@@ -376,9 +296,11 @@ public class Game {
                 printPossibleCommands();
             }
         }
+
+
     }
 
-    static void solveFor (Char test) {
+    static void solveFor (Card test) {
         if (compareCharacterS(test)) {
             end = true;
         } else {
@@ -423,7 +345,8 @@ public class Game {
                 if (arguments.contains("-random")) {
                     solveFor(solveRandom());
                 } else if (arguments.contains("-1")) {
-                    solveFor(solveSmart());
+//                    solveFor(solveSmart());
+                    solveFor(solveRandom());
                 } else if (arguments.contains("-2")) {
                     solveFor(solveRandom());
                 } else if (arguments.contains("-3")) {
@@ -449,13 +372,14 @@ public class Game {
                 } else {
                     System.out.println("< WARNING, YOU NEED TO USE <wipe -confirm> TO WIPE >");
                 }
-            } else if (cmd.equals("guess") || containsChar(command)) {
+            } else if (cmd.equals("guess") || containsChar(cmd)) {
 
                 if (cmd.equals("guess")) {
                     if (arguments.size() == 1) {
                         StringBuilder stringBuilder = new StringBuilder(arguments.toString());
                         stringBuilder.delete(0, 2);
                         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+//                    System.out.println(stringBuilder);
 
                         String charName = stringBuilder.toString();
                         if (containsChar(charName)) {
@@ -469,7 +393,7 @@ public class Game {
                     }
 
                 } else {
-                    solveFor(getCharFromString(command));
+                    solveFor(getCharFromString(cmd));
                 }
             } else {
                 System.out.println("Error in command!\n");
@@ -482,22 +406,22 @@ public class Game {
         end = true;
     }
 
-    private static boolean isIsPossible (Char c) {
+    private static boolean isIsPossible (Card c) {
         boolean isPossible = true;
         if (nonNames.contains(c.name)) {
             isPossible = false;
-        } else if (!possibleWeapons.contains(c.weapon)) {
+        } else if (!possibleRarity.contains(c.rarity)) {
             isPossible = false;
-        } else if (!possibleNations.contains(c.nation)) {
+        } else if (!possibleTypes.contains(c.type)) {
             isPossible = false;
-        } else if (!possibleElements.contains(c.element)) {
-            isPossible = false;
-        } else if (c.version < minVersion || c.version > maxVersion) {
-            isPossible = false;
-        } else if (!isHard) {
-            if (c.isFemale != isFemale & !isFirstRound) {
+        } else if (elixirMin == elixirMax) {
+            // Special case: only that exact elixir is allowed
+            if (c.elixir != elixirMin) {
                 isPossible = false;
-            } else if (isFiveStar != c.isFiveStar & !isFirstRound) {
+            }
+        } else {
+            // Normal case: strictly inside bounds
+            if (c.elixir <= elixirMin || c.elixir >= elixirMax) {
                 isPossible = false;
             }
         }
@@ -518,6 +442,7 @@ public class Game {
     }
 
     public static void main (String[] args) {
+        System.out.println(Holder.characters.size());
 
         repopulatePossible();
 
@@ -535,6 +460,7 @@ public class Game {
                 break;
             }
             repopulatePossible();
+//            System.out.println(possibleNations);
 
             if (!hasSeenTip) {
                 System.out.println("""
@@ -546,5 +472,7 @@ public class Game {
             }
 
         }
+
+
     }
 }
