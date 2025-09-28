@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Queue;
 import java.util.Scanner;
 
 public class StatHandler {
@@ -31,7 +30,7 @@ public class StatHandler {
     quits=0
     totalGames=0*/
 
-    static void fileValuesToVariables(){
+    static void fileValuesToVariables () {
         Scanner scanner;
 
         try {
@@ -40,12 +39,12 @@ public class StatHandler {
             throw new RuntimeException(e);
         }
 
-        while(scanner.hasNextLine()){
+        while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             String[] args = line.split("=");
             int value = Integer.parseInt(args[1]);
 
-            switch (args[0]){
+            switch (args[0]) {
                 case "wins":
                     wins = value;
                     break;
@@ -83,36 +82,79 @@ public class StatHandler {
 
     static public String getInfo () {
         return ("\nTotal games: " + totalGames + "\nWins/quits: " + wins + " / " + quits +
-                "\nWins at tries:"+
+                "\nWins at tries:" +
                 "\n1: " + winsAt1 +
                 "\n2: " + winsAt2 +
                 "\n3: " + winsAt3 +
                 "\n4: " + winsAt4 +
                 "\n5: " + winsAt5 +
-                "\n5+: " + winsAtMore);
+                "\n>: " + winsAtMore);
     }
 
-    static void writeValuesToFile(){
+    static int maxBars = 10;
+
+    static public int getMax(int[] numbs){
+        int max = 0;
+        for(Integer i: numbs){
+            max = Math.max(max,i);
+        }
+        return max;
+    }
+
+    static public String getInfoWithColums () {
+        int [] winsCollection = {winsAt1,winsAt2,winsAt3,winsAt4,winsAt5,winsAtMore};
+
+        double barsPerWin = (double) maxBars /getMax(winsCollection);
+
+//        int barLength = (int) Math.round(barsPerWin * winsCollection[j]);
+
+        String [] bars = {"","","","","",""};
+        for (int j = 0; j < winsCollection.length; j++) {
+            int barLength = (int) Math.round(barsPerWin * winsCollection[j]);
+
+            for (int o = 0; o < barLength; o++) {
+                bars[j] += "#";
+            }
+            for (int o = barLength; o < maxBars +1; o++)  {
+                bars[j] += " ";
+            }
+
+        }
+
+        return ("<=====Statistics=====>" +
+                "\nTotal games: " + totalGames + "\nWins/quits: " + wins + " / " + quits +
+                "\nWins at tries:" +
+                "\n1: " + bars[0] + winsAt1 +
+                "\n2: " + bars[1] + winsAt2 +
+                "\n3: " + bars[2] + winsAt3 +
+                "\n4: " + bars[3] + winsAt4 +
+                "\n5: " + bars[4] + winsAt5 +
+                "\n>: " + bars[5] + winsAtMore +
+                "\n<=====Statistics=====>\n");
+    }
+
+    static void writeValuesToFile () {
         FileWriter fileWriter;
         try {
-            fileWriter= new FileWriter(stats);
-            fileWriter.write("wins="+wins+"\n");
-            fileWriter.write("winsAt1="+winsAt1+"\n");
-            fileWriter.write("winsAt2="+winsAt2+"\n");
-            fileWriter.write("winsAt3="+winsAt3+"\n");
-            fileWriter.write("winsAt4="+winsAt4+"\n");
-            fileWriter.write("winsAt5="+winsAt5+"\n");
-            fileWriter.write("winsAtMore="+winsAtMore+"\n");
-            fileWriter.write("quits="+quits+"\n");
-            fileWriter.write("totalGames="+totalGames+"\n");
+            fileWriter = new FileWriter(stats);
+            fileWriter.write("wins=" + wins + "\n");
+            fileWriter.write("winsAt1=" + winsAt1 + "\n");
+            fileWriter.write("winsAt2=" + winsAt2 + "\n");
+            fileWriter.write("winsAt3=" + winsAt3 + "\n");
+            fileWriter.write("winsAt4=" + winsAt4 + "\n");
+            fileWriter.write("winsAt5=" + winsAt5 + "\n");
+            fileWriter.write("winsAtMore=" + winsAtMore + "\n");
+            fileWriter.write("quits=" + quits + "\n");
+            fileWriter.write("totalGames=" + totalGames + "\n");
             fileWriter.flush();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    static void generateFile(){
-        try{
+
+    static void generateFile () {
+        try {
             stats.createNewFile();
             FileWriter fillTheNewFile = new FileWriter(stats);
             fillTheNewFile.write("wins=0\n" +
@@ -130,40 +172,45 @@ public class StatHandler {
         }
 
     }
-    static boolean isValuesLegit(){
-        int sumOfWins = winsAt1+winsAt2+winsAt3+winsAt4+winsAt5+winsAtMore;
-        int sumOfQuitsWins = wins+quits;
-        if(wins!=sumOfWins){
+
+    static boolean isValuesLegit () {
+        int sumOfWins = winsAt1 + winsAt2 + winsAt3 + winsAt4 + winsAt5 + winsAtMore;
+        int sumOfQuitsWins = wins + quits;
+        if (wins != sumOfWins) {
             return false;
         }
 
-        if(totalGames!=sumOfQuitsWins){
+        if (totalGames != sumOfQuitsWins) {
             return false;
         }
         return true;
     }
 
-    static void writeValues(int score, boolean isWin, boolean isQuit){
+    static void writeValues (int score, boolean isWin, boolean isQuit) {
         totalGames++;
-        if(isWin){
+        if (isWin) {
             wins++;
-            switch (score){
+            switch (score) {
                 case 0:
                     System.out.println("Error, score of 0!");
                 case 1:
                     winsAt1++;
                     break;
                 case 2:
-                    winsAt2++;;
+                    winsAt2++;
+                    ;
                     break;
                 case 3:
-                    winsAt3++;;
+                    winsAt3++;
+                    ;
                     break;
                 case 4:
-                    winsAt4++;;
+                    winsAt4++;
+                    ;
                     break;
                 case 5:
-                    winsAt5++;;
+                    winsAt5++;
+                    ;
                     break;
                 default:
                     winsAtMore++;
@@ -177,16 +224,16 @@ public class StatHandler {
     }
 
     static {
-        if(!stats.exists()){
+        if (!stats.exists()) {
             generateFile();
-        } else{
+        } else {
             Scanner scanner = null;
             try {
                 scanner = new Scanner(stats);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            if(!scanner.hasNext()){
+            if (!scanner.hasNext()) {
                 generateFile();
             }
             scanner.close();

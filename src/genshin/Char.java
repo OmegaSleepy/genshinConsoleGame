@@ -46,7 +46,7 @@ public class Char {
     static final Char RAZOR = new Char("Razor", 1.0, Element.ELECTRO, Nation.MONSTADT, Weapon.CLAYMORE, false, false);
     static final Char LISA = new Char("Lisa", 1.0, Element.ELECTRO, Nation.MONSTADT, Weapon.CATALYST, false, true);
     static final Char FISCHL = new Char("Fischl", 1.0, Element.ELECTRO, Nation.MONSTADT, Weapon.BOW, false, true,
-            new String[]{"Fisc"});
+            new String[]{"Fisc","Fish","Fishl"});
     static final Char BARBARA = new Char("Barbara", 1.0, Element.HYDRO, Nation.MONSTADT, Weapon.CATALYST, false, true);
     static final Char BENNETT = new Char("Bennett", 1.0, Element.PYRO, Nation.MONSTADT, Weapon.SWORD, false, false,
             new String[]{"Ben Ten"});
@@ -68,36 +68,36 @@ public class Char {
     static final Char VARKA = new Char("Varka", 6.2, Element.ANEMO, Nation.MONSTADT, Weapon.CLAYMORE, true, false);
     static final Char DURIN = new Char("Durin", 6.4, Element.PYRO, Nation.MONSTADT, Weapon.SWORD, true, false);
 
-    //===LYUE===//
+    //===LIYUE===//
 
-    static final Char NINGUANG = new Char("Ninguang", 1.0, Element.GEO, Nation.LYUE, Weapon.CATALYST, false, true);
-    static final Char CHONGYUN = new Char("Chongyun", 1.0, Element.CRYO, Nation.LYUE, Weapon.CLAYMORE, false, false);
-    static final Char BEIDOU = new Char("Beidou", 1.0, Element.ELECTRO, Nation.LYUE, Weapon.CLAYMORE, false, true);
-    static final Char XIANGLING = new Char("Xiangling", 1.0, Element.PYRO, Nation.LYUE, Weapon.POLEARM, false, true);
-    static final Char XINGQIU = new Char("Xingqiu", 1.0, Element.HYDRO, Nation.LYUE, Weapon.SWORD, false,false,
+    static final Char NINGUANG = new Char("Ninguang", 1.0, Element.GEO, Nation.LIYUE, Weapon.CATALYST, false, true);
+    static final Char CHONGYUN = new Char("Chongyun", 1.0, Element.CRYO, Nation.LIYUE, Weapon.CLAYMORE, false, false);
+    static final Char BEIDOU = new Char("Beidou", 1.0, Element.ELECTRO, Nation.LIYUE, Weapon.CLAYMORE, false, true);
+    static final Char XIANGLING = new Char("Xiangling", 1.0, Element.PYRO, Nation.LIYUE, Weapon.POLEARM, false, true);
+    static final Char XINGQIU = new Char("Xingqiu", 1.0, Element.HYDRO, Nation.LIYUE, Weapon.SWORD, false,false,
             new String[]{"Xingqui"});
-    static final Char XIANYAN = new Char("Xianyan", 1.1, Element.PYRO, Nation.LYUE, Weapon.CLAYMORE, false, true);
-    static final Char YAN_FEI = new Char("Yan Fei", 1.5, Element.PYRO, Nation.LYUE, Weapon.CATALYST, false, true,
+    static final Char XIANYAN = new Char("Xianyan", 1.1, Element.PYRO, Nation.LIYUE, Weapon.CLAYMORE, false, true);
+    static final Char YAN_FEI = new Char("Yan Fei", 1.5, Element.PYRO, Nation.LIYUE, Weapon.CATALYST, false, true,
             new String[]{"Fei"});
-    static final Char YUN_JIN = new Char("Yun Jin", 2.4, Element.GEO, Nation.LYUE, Weapon.POLEARM, false, true,
+    static final Char YUN_JIN = new Char("Yun Jin", 2.4, Element.GEO, Nation.LIYUE, Weapon.POLEARM, false, true,
             new String[]{"Yun", "Jin"});
-    static final Char YAOYAO = new Char("Yaoyao", 3.4, Element.DENTRO, Nation.LYUE, Weapon.POLEARM, false, true,
+    static final Char YAOYAO = new Char("Yaoyao", 3.4, Element.DENTRO, Nation.LIYUE, Weapon.POLEARM, false, true,
             new String[]{"Yao"});
-    static final Char GAMING = new Char("Gaming", 4.4, Element.PYRO, Nation.LYUE, Weapon.CLAYMORE, false, false);
-    static final Char LAN_YAN = new Char("Lan Yan", 5.3, Element.ANEMO, Nation.LYUE, Weapon.CATALYST, false, true,
+    static final Char GAMING = new Char("Gaming", 4.4, Element.PYRO, Nation.LIYUE, Weapon.CLAYMORE, false, false);
+    static final Char LAN_YAN = new Char("Lan Yan", 5.3, Element.ANEMO, Nation.LIYUE, Weapon.CATALYST, false, true,
             new String[]{"Lan"});
 
-    static final Char QIQI = new Char("Qiqi", 1.0, Element.CRYO, Nation.LYUE, Weapon.SWORD, true, true);
-    static final Char KEQING = new Char("Keqing", 1.0, Element.ELECTRO, Nation.LYUE, Weapon.SWORD, true, true);
-    static final Char ZHONGLI = new Char("Zhongli", 1.1, Element.GEO, Nation.LYUE, Weapon.CLAYMORE, true, false);
-    static final Char GANYU = new Char("Ganyu", 1.2, Element.CRYO, Nation.LYUE, Weapon.BOW, true, true);
-    static final Char HU_TAO = new Char("Hu Tao", 1.3, Element.PYRO, Nation.LYUE, Weapon.POLEARM, true, true);
-    static final Char XIAO = new Char("Xiao", 1.3, Element.ANEMO, Nation.LYUE, Weapon.POLEARM, true, false);
-    static final Char SHENHE = new Char("Shenhe", 2.4, Element.CRYO, Nation.LYUE, Weapon.POLEARM, true,true);
-    static final Char YELAN = new Char("Yelan", 2.7, Element.HYDRO, Nation.LYUE, Weapon.BOW, true,true);
-    static final Char BAIZHU = new Char("Baizhu", 3.6, Element.DENTRO, Nation.LYUE, Weapon.CATALYST, true,false);
-    static final Char XIANYUN = new Char("Xianyun", 4.4, Element.ANEMO, Nation.LYUE, Weapon.CATALYST, true,true);
-    static final Char CALEDON_MARE = new Char("Caledon Mare", 6.3, Element.ANEMO, Nation.LYUE, Weapon.BOW, true,true,
+    static final Char QIQI = new Char("Qiqi", 1.0, Element.CRYO, Nation.LIYUE, Weapon.SWORD, true, true);
+    static final Char KEQING = new Char("Keqing", 1.0, Element.ELECTRO, Nation.LIYUE, Weapon.SWORD, true, true);
+    static final Char ZHONGLI = new Char("Zhongli", 1.1, Element.GEO, Nation.LIYUE, Weapon.CLAYMORE, true, false);
+    static final Char GANYU = new Char("Ganyu", 1.2, Element.CRYO, Nation.LIYUE, Weapon.BOW, true, true);
+    static final Char HU_TAO = new Char("Hu Tao", 1.3, Element.PYRO, Nation.LIYUE, Weapon.POLEARM, true, true);
+    static final Char XIAO = new Char("Xiao", 1.3, Element.ANEMO, Nation.LIYUE, Weapon.POLEARM, true, false);
+    static final Char SHENHE = new Char("Shenhe", 2.4, Element.CRYO, Nation.LIYUE, Weapon.POLEARM, true,true);
+    static final Char YELAN = new Char("Yelan", 2.7, Element.HYDRO, Nation.LIYUE, Weapon.BOW, true,true);
+    static final Char BAIZHU = new Char("Baizhu", 3.6, Element.DENTRO, Nation.LIYUE, Weapon.CATALYST, true,false);
+    static final Char XIANYUN = new Char("Xianyun", 4.4, Element.ANEMO, Nation.LIYUE, Weapon.CATALYST, true,true);
+    static final Char CALEDON_MARE = new Char("Caledon Mare", 6.3, Element.ANEMO, Nation.LIYUE, Weapon.BOW, true,true,
             new String[]{"Horse"});
 
     //===SNEZHNAYA===
@@ -147,10 +147,11 @@ public class Char {
     static final Char CANDACE = new Char("Candace", 3.1, Element.HYDRO, Nation.SUMERU, Weapon.POLEARM, false, true);
     static final Char LAYLA = new Char("Layla", 3.2, Element.CRYO, Nation.SUMERU, Weapon.SWORD, false, true);
     static final Char FARUZAN = new Char("Faruzan", 3.3, Element.ANEMO, Nation.SUMERU, Weapon.BOW, false, true);
-    static final Char KAVEH = new Char("Kaveh", 3.6, Element.DENTRO, Nation.SUMERU, Weapon.CATALYST, false, false);
+    static final Char KAVEH = new Char("Kaveh", 3.6, Element.DENTRO, Nation.SUMERU, Weapon.CLAYMORE, false, false);
     static final Char SETHOS = new Char("Sethos", 4.7, Element.ELECTRO, Nation.SUMERU, Weapon.BOW, false, false);
 
-    static final Char TIGHNARI = new Char("Tighnari", 3.0, Element.DENTRO, Nation.SUMERU, Weapon.BOW, true, false);
+    static final Char TIGHNARI = new Char("Tighnari", 3.0, Element.DENTRO, Nation.SUMERU, Weapon.BOW, true, false,
+            new String[]{"Tigh"});
     static final Char CYNO = new Char("Cyno", 3.1, Element.ELECTRO, Nation.SUMERU, Weapon.POLEARM, true, false);
     static final Char NILOU = new Char("Nilou", 3.1, Element.HYDRO, Nation.SUMERU, Weapon.SWORD, true, true);
     static final Char NAHIDA = new Char("Nahida", 3.2, Element.DENTRO, Nation.SUMERU, Weapon.CATALYST, true, true);
@@ -163,10 +164,11 @@ public class Char {
     static final Char LYNETTE = new Char("Lynette", 4.0, Element.ANEMO, Nation.FONTAINE, Weapon.SWORD, false,true);
     static final Char FREMINET = new Char("Freminet", 4.0, Element.CRYO, Nation.FONTAINE, Weapon.CLAYMORE, false,false);
     static final Char CHARLOTTE = new Char("Charlotte", 4.2, Element.CRYO, Nation.FONTAINE, Weapon.CATALYST, false,true);
-    static final Char CHEVREUSE = new Char("Chevreuse", 4.3, Element.PYRO, Nation.FONTAINE, Weapon.POLEARM, false,true);
+    static final Char CHEVREUSE = new Char("Chevreuse", 4.3, Element.PYRO, Nation.FONTAINE, Weapon.POLEARM, false,true,
+            new String[]{"Chev"});
 
     static final Char LYNEY = new Char("Lyney", 4.0, Element.PYRO, Nation.FONTAINE, Weapon.BOW, true,false,
-            new String[]{"lini"});
+            new String[]{"Lini"});
     static final Char NEUVILLETTE = new Char("Neuvillette", 4.1, Element.HYDRO, Nation.FONTAINE, Weapon.CATALYST, true,false,
             new String[]{"Neuv"});
     static final Char WRIOTHESLEY = new Char("Wriothesley", 4.1, Element.CRYO, Nation.FONTAINE, Weapon.CATALYST, true,false,
@@ -188,12 +190,15 @@ public class Char {
     static final Char IANSAN = new Char("Iansan", 5.5, Element.ELECTRO, Nation.NATLAN, Weapon.POLEARM, false,true);
     static final Char IFA = new Char("Ifa", 5.6, Element.ANEMO, Nation.NATLAN, Weapon.CATALYST, false,false);
 
-    static final Char MUALANI = new Char("Mualani", 5.0, Element.HYDRO, Nation.NATLAN, Weapon.CATALYST, true,true);
+    static final Char MUALANI = new Char("Mualani", 5.0, Element.HYDRO, Nation.NATLAN, Weapon.CATALYST, true,true,
+            new String[]{"lani","mua"});
     static final Char KINICH = new Char("Kinich", 5.0, Element.DENTRO, Nation.NATLAN, Weapon.CLAYMORE, true,false);
     static final Char XILONEN = new Char("Xilonen", 5.1, Element.GEO, Nation.NATLAN, Weapon.SWORD, true,true);
     static final Char CHASCA = new Char("Chasca", 5.2, Element.ANEMO, Nation.NATLAN, Weapon.BOW, true,true);
-    static final Char CITLALI = new Char("Citlali", 5.3, Element.CRYO, Nation.NATLAN, Weapon.CATALYST, true,true);
-    static final Char MAVUIKA = new Char("Mavuika", 5.3, Element.PYRO, Nation.NATLAN, Weapon.CLAYMORE, true,true);
+    static final Char CITLALI = new Char("Citlali", 5.3, Element.CRYO, Nation.NATLAN, Weapon.CATALYST, true,true,
+            new String[]{"Citalali","Citali"});
+    static final Char MAVUIKA = new Char("Mavuika", 5.3, Element.PYRO, Nation.NATLAN, Weapon.CLAYMORE, true,true,
+            new String[]{"Mav"});
     static final Char VARESA = new Char("Varesa", 5.5, Element.ELECTRO, Nation.NATLAN, Weapon.CATALYST, true,true);
 
     //===NOD KRAI===
@@ -204,7 +209,7 @@ public class Char {
     static final Char INEFFA = new Char("Ineffa", 5.8, Element.ELECTRO, Nation.NOD_KRAI, Weapon.POLEARM, true,true);
     static final Char LAUMA = new Char("Lauma", 6.0, Element.DENTRO, Nation.NOD_KRAI, Weapon.CATALYST, true,true);
     static final Char KYRRYL_CHUDOMIROVICH_FLINS = new Char("Kyrryl Chudomirovich Flins", 6.0, Element.ELECTRO, Nation.NOD_KRAI, Weapon.POLEARM, true,false,
-            new String[] {"Flins","Kiril","Kyrryl","Chudomirovich", "Gojo", "Metodii", "Lamp", ""});
+            new String[] {"Flins","Kiril","Kyrryl","Chudomirovich", "Gojo", "Metodii", "Lamp"});
     static final Char NEFER = new Char("Nefer", 6.1, Element.DENTRO, Nation.NOD_KRAI, Weapon.CATALYST, true,true);
     static final Char COLUMBINA = new Char("Columbina", 6.3, Element.HYDRO, Nation.NOD_KRAI, Weapon.POLEARM, true,true);
 

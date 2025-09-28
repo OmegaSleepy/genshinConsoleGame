@@ -7,7 +7,7 @@ enum Element {
 }
 
 enum Nation {
-    MONSTADT, LYUE, INAZUMA, SUMERU, FONTAINE, NATLAN, NOD_KRAI, SNEZHNAYA, OUTSIDE
+    MONSTADT, LIYUE, INAZUMA, SUMERU, FONTAINE, NATLAN, NOD_KRAI, SNEZHNAYA, OUTSIDE
 }
 
 enum Weapon {
@@ -47,7 +47,7 @@ public class Game {
 
     static {
         possibleNations.add(Nation.MONSTADT);
-        possibleNations.add(Nation.LYUE);
+        possibleNations.add(Nation.LIYUE);
         possibleNations.add(Nation.SNEZHNAYA);
         possibleNations.add(Nation.INAZUMA);
         possibleNations.add(Nation.SUMERU);
@@ -59,6 +59,8 @@ public class Game {
 
     static boolean isFemale = false;
     static boolean isFiveStar;
+
+    static boolean isFirstRound = true;
 
     static List<String> nonNames = new ArrayList<>();
 
@@ -99,7 +101,7 @@ public class Game {
     static Char hiddenCharacter = getRandomCharacter();
 
     static boolean compareCharacters (Char guess) {
-
+        isFirstRound = false;
         //name
         if (Objects.equals(guess.name, hiddenCharacter.name)) {
             System.out.print("Name is 🟩. ");
@@ -115,24 +117,30 @@ public class Game {
             minVersion = guess.version;
 
         } else if (guess.version > hiddenCharacter.version) {
-            if (guess.version - hiddenCharacter.version > -0.5) {
+            // Guess is too high
+            if (guess.version - hiddenCharacter.version > 0.5) {
                 System.out.print("Version is lower <<. ");
             } else {
                 System.out.print("Version is lower <. ");
             }
-            if (maxVersion > guess.version) {
-                maxVersion = guess.version;
+            if (guess.version - 0.1 < maxVersion) {
+                maxVersion = guess.version - 0.1;
             }
+
         } else {
-            if ((guess.version - hiddenCharacter.version > 0.5)) {
+            // Guess is too low
+            if (hiddenCharacter.version - guess.version > 0.5) {
                 System.out.print("Version is higher >>. ");
             } else {
                 System.out.print("Version is higher >. ");
             }
-            if (minVersion < guess.version) {
-                minVersion = guess.version;
+            if (guess.version + 0.1 > minVersion) {
+                minVersion = guess.version + 0.1;
             }
         }
+        minVersion = Math.round(minVersion * 10.0) / 10.0;
+        maxVersion = Math.round(maxVersion * 10.0) / 10.0;
+
         System.out.println(guess.version);
 //        System.out.println(minVersion + " " + maxVersion);
 
@@ -175,10 +183,10 @@ public class Game {
         if(!isHard){
             if (guess.isFemale == hiddenCharacter.isFemale) {
                 System.out.print("Gender is 🟩. ");
-                isFemale = true;
+                isFemale = guess.isFemale;
             } else {
                 System.out.print("Gender is 🟥. ");
-                isFemale = false;
+                isFemale = !guess.isFemale;
             }
             if (guess.isFemale) {
                 System.out.println("Female");
@@ -206,37 +214,64 @@ public class Game {
 
     static void printPossibleCharacters () {
         Holder.sortByVersion();
+        System.out.println("<========Help========>");
+        System.out.print("< Possible Weapons: ");
         for (Weapon weapon : possibleWeapons) {
             System.out.print(weapon + " ");
         }
-        System.out.println();
+        System.out.println(">\n");
+        System.out.print("< Possible Nations: ");
         for (Nation nation : possibleNations) {
             System.out.print(nation + " ");
         }
-        System.out.println();
+        System.out.println(">\n");
+        System.out.print("< Possible Elements: ");
         for (Element element : possibleElements) {
             System.out.print(element + " ");
         }
-        System.out.println();
+        System.out.print(">\n");
+        System.out.println("< Version range: ( " + minVersion + " < version < " + maxVersion +
+                " ) >");
 
-        System.out.println("Min " + minVersion);
-        System.out.println("Max " + maxVersion);
 
         if(!isHard){
-            System.out.println("IsFemale? " + isFemale);
-            System.out.println("IsFiveStar? " + isFiveStar);
-        } else{
-            System.out.println("<!Hardmode enabled, no gender or rarity value!>");
+            System.out.print("< Gender - ");
+            if(isFemale){
+                System.out.print(" 👩 Female");
+            } else{
+                System.out.print(" 👨 Male");
+            }
+            System.out.print(" >\n");
+
+            System.out.print("< Rarity - ");
+            if(isFiveStar){
+                System.out.print(" 5⭐");
+            } else{
+                System.out.print(" 4⭐");
+            }
+            System.out.print(" >\n");
+
         }
+//        else{
+//            System.out.println("<!Hardmode enabled, no gender or rarity value!>");
+//        }
 
-
-        System.out.println("Possible characters: ");
+        int versionStep = -1; // start below any real version
+        System.out.println("\n< Possible characters >");
         for (Char c : Holder.characters) {
             boolean isPossible = isIsPossible(c);
             if (isPossible) {
-                System.out.println(c.name);
+                int majorVersion = (int) Math.floor(c.version);
+                if (majorVersion > versionStep) {
+                    System.out.printf("\n<%d.X>\n", majorVersion);
+                    versionStep = majorVersion; // sync with actual version
+                }
+
+                System.out.printf("<%s>\n", c.name);
             }
         }
+
+        System.out.println("<========Help========>");
         System.out.println();
     }
 
@@ -250,13 +285,16 @@ public class Game {
             isPossible = false;
         } else if (!possibleElements.contains(c.element)) {
             isPossible = false;
-        } else if (isFemale != c.isFemale & !isHard) {
+        } else if (c.version < minVersion || c.version > maxVersion) {
             isPossible = false;
-        } else if (isFiveStar != c.isFiveStar & !isHard) {
-            isPossible = false;
-        } else if (maxVersion < c.version || minVersion > c.version) {
-            isPossible = false;
+        } else if (!isHard) {
+            if (c.isFemale != isFemale & !isFirstRound) {
+            isPossible = false;}
+            else if (isFiveStar != c.isFiveStar &!isFirstRound) {
+                isPossible = false;
+            }
         }
+
         return isPossible;
     }
 
@@ -292,9 +330,15 @@ public class Game {
                 StatHandler.writeValues(0, false, true);
                 break;
             }
+
             if (name.toLowerCase().equals("help")) {
                 help = true;
                 printPossibleCharacters();
+            }
+
+            if (name.toLowerCase().equals("print")){
+                help = true;
+                System.out.println(StatHandler.getInfoWithColums());
             }
 
             if (containsChar(name)) {
@@ -314,10 +358,10 @@ public class Game {
 
         if (!quit) {
             StatHandler.writeValues(score, true, false);
-            System.out.println("Won in " + score + " attempts!");
+            System.out.println("\nWon in " + score + " attempts!");
         }
 
-        System.out.println(StatHandler.getInfo());
+        System.out.println(StatHandler.getInfoWithColums());
 
 
     }
