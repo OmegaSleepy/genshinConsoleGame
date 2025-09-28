@@ -219,4 +219,5 @@ public class Char {
     public boolean hasAlternativeNames(){
         return !Arrays.equals(alternativeNames, new String[0]);
     }
+
 }

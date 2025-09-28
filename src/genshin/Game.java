@@ -1,5 +1,9 @@
 package genshin;
 
+import genshin.util.Compare;
+import genshin.util.Random;
+import genshin.util.StatHandler;
+
 import java.util.*;
 
 enum Element {
@@ -35,7 +39,7 @@ public class Game {
 
     static List<String> nonNames = new ArrayList<>();
 
-    static void repopulatePossible(){
+    static void repopulatePossible () {
         possibleNations.clear();
         possibleWeapons.clear();
         possibleElements.clear();
@@ -76,8 +80,8 @@ public class Game {
 
     static Char getRandomCharacter () {
         seed = (short) ((seed + 1) % Short.MAX_VALUE);
-        new Random(seed);
-        return Holder.characters.get(new Random(seed).getRandomCapped(Holder.characters.size()));
+        new genshin.util.Random(seed);
+        return Holder.characters.get(new genshin.util.Random(seed).getRandomCapped(Holder.characters.size()));
     }
 
     static Char getCharFromString (String name) {
@@ -107,112 +111,65 @@ public class Game {
 
     static Char hiddenCharacter = getRandomCharacter();
 
-    static boolean compareCharacters (Char guess) {
+    static Map<String, String> objectTruthTable = new HashMap<>();
+    static Map<String, String> literalTruthTable = new HashMap<>();
+
+    static {
+        objectTruthTable.put("equal", "{key} is 🟩.");
+        objectTruthTable.put("notEqual", "{key} is 🟥.");
+
+        literalTruthTable.put("equal", "{key} is 🟩.");
+        literalTruthTable.put("greater", "{key} is greater >.");
+        literalTruthTable.put("lower", "{key} is lower <.");
+    }
+
+    static boolean compareCharacterS (Char guess) {
         isFirstRound = false;
-        //name
-        if (Objects.equals(guess.name, hiddenCharacter.name)) {
-            System.out.print("Name is 🟩. ");
-        } else {
-            System.out.print("Name is 🟥. ");
+
+        if (!Compare.Objects(Game.capitalizeFirstChar(guess.name),
+                Game.capitalizeFirstChar(hiddenCharacter.name), "Name", objectTruthTable)) {
             nonNames.add(guess.name);
         }
-        System.out.println(capitalizeFirstChar(guess.name));
 
-        if (guess.version == hiddenCharacter.version) {
-            System.out.print("Version is 🟩. ");
-            maxVersion = guess.version;
-            minVersion = guess.version;
-
-        } else if (guess.version > hiddenCharacter.version) {
-            // Guess is too high
-            if (guess.version - hiddenCharacter.version > 0.5) {
-                System.out.print("Version is lower <<. ");
-            } else {
-                System.out.print("Version is lower <. ");
+        if (Compare.Number(guess.version, hiddenCharacter.version, "Version", literalTruthTable) == 1) {
+            if (guess.version - 0.1 > maxVersion) {
+                maxVersion = guess.version;
             }
-            if (guess.version - 0.1 < maxVersion) {
-                maxVersion = guess.version - 0.1;
-            }
-
-        } else {
-            // Guess is too low
-            if (hiddenCharacter.version - guess.version > 0.5) {
-                System.out.print("Version is higher >>. ");
-            } else {
-                System.out.print("Version is higher >. ");
-            }
-            if (guess.version + 0.1 > minVersion) {
-                minVersion = guess.version + 0.1;
+            if (guess.version + 0.1 < minVersion) {
+                minVersion = guess.version;
             }
         }
         minVersion = Math.round(minVersion * 10.0) / 10.0;
         maxVersion = Math.round(maxVersion * 10.0) / 10.0;
 
-        System.out.println(guess.version);
-
-        //TODO check if contains() is not needed
-
-        if (guess.element == hiddenCharacter.element) {
-            System.out.print("Element is 🟩. ");
-            possibleElements.clear();
-            possibleElements.add(guess.element);
-        } else {
-            System.out.print("Element is 🟥. ");
-            if (possibleElements.contains(guess.element)) {
-                possibleElements.remove(guess.element);
-            }
-        }
-        System.out.println(guess.element);
-
-        if (guess.weapon == hiddenCharacter.weapon) {
-            System.out.print("Weapon is 🟩. ");
+        if (Compare.Objects(guess.weapon, hiddenCharacter.weapon, "Weapon", objectTruthTable)) {
             possibleWeapons.clear();
             possibleWeapons.add(guess.weapon);
         } else {
-            System.out.print("Weapon is 🟥. ");
-            if (possibleWeapons.contains(guess.weapon)) {
+            if(possibleWeapons.contains(guess.weapon)){
                 possibleWeapons.remove(guess.weapon);
             }
         }
-        System.out.println(guess.weapon);
 
-        if (guess.nation == hiddenCharacter.nation) {
-            System.out.print("Nation is 🟩. ");
+        if (Compare.Objects(guess.element, hiddenCharacter.element, "Element", objectTruthTable)) {
+            possibleElements.clear();
+            possibleElements.add(guess.element);
+        } else {
+            if(possibleElements.contains(guess.element)){
+                possibleElements.remove(guess.element);
+            }
+        }
+
+        if (Compare.Objects(guess.nation, hiddenCharacter.nation, "Nation", objectTruthTable)) {
             possibleNations.clear();
             possibleNations.add(guess.nation);
         } else {
-            System.out.print("Nation is 🟥. ");
-            if (possibleNations.contains(guess.nation)) {
-                possibleNations.remove(guess.nation);
+            if(possibleNations.contains(guess.nation)){
+                possibleElements.remove(guess.element);
             }
         }
-        System.out.println(guess.nation);
 
-        if (!isHard) {
-            if (guess.isFemale == hiddenCharacter.isFemale) {
-                System.out.print("Gender is 🟩. ");
-                isFemale = guess.isFemale;
-            } else {
-                System.out.print("Gender is 🟥. ");
-                isFemale = !guess.isFemale;
-            }
-            if (guess.isFemale) {
-                System.out.println("Female");
-            } else {
-                System.out.println("Male");
-            }
-
-            if (guess.isFiveStar == hiddenCharacter.isFiveStar) {
-                System.out.print("Stars is 🟩. ");
-                isFiveStar = guess.isFiveStar;
-            } else {
-                System.out.print("Stars is 🟥. ");
-                isFiveStar = !guess.isFiveStar;
-            }
-            System.out.println(guess.isFiveStar);
-        }
-
-
+        System.out.println();
         return guess.equals(hiddenCharacter);
     }
 
@@ -282,7 +239,7 @@ public class Game {
 
     //===SOLVING ALGORITHMS===
 
-    static Char solveSmart() {
+    static Char solveSmart () {
         // collect all possible candidates
         List<Char> possibleChar = new ArrayList<>();
         for (Char c : Holder.characters) {
@@ -341,6 +298,7 @@ public class Game {
 
         return best;
     }
+
     static Char solveRandom () {
         List<Char> possibleChar = new ArrayList<>();
         for (Char c : Holder.characters) {
@@ -356,66 +314,55 @@ public class Game {
 
     static boolean kill = false;
 
-    static String[] commands = {"guess", "help", "quit", "kill", "solve", "stats"};
+    static String[] commands = {"guess", "help", "quit", "kill", "solve", "stats", "wipe"};
 
 
-    static void printPossibleCommands(){
+    static void printPossibleCommands () {
         System.out.println("< List of all commands > ");
         System.out.println(Arrays.toString(commands));
         System.out.println("\n< Help for specific command: help -command >");
     }
 
-    static void printHelp (List<String> arguments){
+    static void printHelp (List<String> arguments) {
 
-        if(arguments.isEmpty()){
+        if (arguments.isEmpty()) {
             printPossibleCommands();
         }
 
-        else if(arguments.contains("-guess")){
-            System.out.println("""
-                    
-                    < Format is < guess -character_name > >
-                    < or just < character_name > >""");
+        Map<String, String> helpHelppers = new HashMap<>();
+        helpHelppers.put("-solve", """
+                < Enter < solve > for default algorithm to solve >
+                < or use arguments -random -1 -2 -3 >
+                < default is -random >""");
+        helpHelppers.put("-quit", "< Enter < quit > to quit this run > \n" +
+                "< Other possible syntax are: end, alt-f4, q >");
+        helpHelppers.put("-guess", """
+                < Format is < guess -character_name > >
+                < or just < character_name > >""");
+        helpHelppers.put("-kill", "< Enter < kill > to end the programme >\n" +
+                "< Possible arguments: -p (to print stats) >");
+        helpHelppers.put("-stats", "< Enter < print > to stats statistics >\n" +
+                "< Possible arguments: -i (to print without columns) >");
+        helpHelppers.put("-possible", "< Enter < possible > to print possible characters >");
+        helpHelppers.put("-wipe", "< Enter < wipe -confirm > to wipe your safe file >");
+
+        helpHelppers.put("-help", "< List of all commands >\n" + Arrays.toString(commands) +
+                "\n< Help for specific command: help -command >");
+
+        for (String argument : arguments) {
+            if (helpHelppers.containsKey(argument)) {
+                System.out.println(helpHelppers.get(argument));
+            } else {
+                System.out.println("< ERROR IN HELP SYNTAX >");
+                printPossibleCommands();
+            }
         }
 
-        else if (arguments.contains("-help")) {
-            printPossibleCommands();
-        }
 
-        else if (arguments.contains("-solve")) {
-            System.out.println("""
-                    < Enter < solve > for default algorithm to solve >
-                    < or use arguments -random -1 -2 -3 >
-                    < default is -random >""");
-        }
-
-        else if (arguments.contains("-quit")) {
-            System.out.println("< Enter < quit > to quit this run > \n" +
-                    "< Other possible syntax are: end, alt-f4, q >");
-        }
-
-        else if (arguments.contains("-kill")) {
-            System.out.println("< Enter < kill > to end the programme >\n" +
-                    "< Possible arguments: -p (to print stats) >");
-        }
-
-        else if (arguments.contains("-stats")) {
-            System.out.println("< Enter < print > to stats statistics >\n" +
-                    "< Possible arguments: -i (to print without columns) >");
-        }
-
-        else if (arguments.contains("-possible")) {
-            System.out.println("< Enter < possible > to print possible characters >");
-        }
-
-        else{
-            System.out.println("< ERROR IN HELP SYNTAX >");
-            printPossibleCommands();
-        }
     }
 
-    static void solveFor(Char test){
-        if (compareCharacters(test)) {
+    static void solveFor (Char test) {
+        if (compareCharacterS(test)) {
             end = true;
         } else {
             System.out.println("Wrong!\n");
@@ -425,18 +372,18 @@ public class Game {
 
     static int score = 1;
 
-    static void commandHandler(){
+    static void commandHandler () {
 
         Scanner scanner = new Scanner(System.in);
         end = false;
         score = 1;
-        while(!end){
+        while (!end) {
             String command = scanner.nextLine();
             command = command.toLowerCase();
             String cmd = command.split(" ")[0];
             List<String> arguments = new ArrayList<>(Arrays.stream(command.split(" ")).toList());
             arguments.removeFirst();
-            if(!arguments.isEmpty()){
+            if (!arguments.isEmpty()) {
                 System.out.println(arguments);
             }
 
@@ -446,78 +393,69 @@ public class Game {
                 System.out.printf("< You lost >\n< you quit (weak) > \n< character was %s >\n", hiddenCharacter.name);
                 StatHandler.writeValues(0, false, true);
                 break;
-            }
-
-            else if (cmd.equals("kill")) {
+            } else if (cmd.equals("kill")) {
                 kill = true;
                 quit = true;
 
-                if(arguments.contains("-p")){
+                if (arguments.contains("-p")) {
                     System.out.println(StatHandler.getInfoWithColums());
                 }
 
                 break;
-            }
-
-            else if (cmd.equals("solve")) {
-                if(arguments.contains("-random")){
+            } else if (cmd.equals("solve")) {
+                if (arguments.contains("-random")) {
                     solveFor(solveRandom());
                 } else if (arguments.contains("-1")) {
                     solveFor(solveSmart());
-                }else if (arguments.contains("-2")) {
+                } else if (arguments.contains("-2")) {
                     solveFor(solveRandom());
-                }else if (arguments.contains("-3")) {
+                } else if (arguments.contains("-3")) {
                     solveFor(solveRandom());
                 } else {
                     solveFor(solveRandom());
                 }
-            }
-
-            else if (cmd.equals("possible")) {
+            } else if (cmd.equals("possible")) {
                 printPossibleCharacters();
-            }
-
-            else if(cmd.equals("help")){
+            } else if (cmd.equals("help")) {
                 printHelp(arguments);
-            }
-
-            else if (cmd.equals("stats")) {
-                if(arguments.contains("-i")){
+            } else if (cmd.equals("stats")) {
+                if (arguments.contains("-i")) {
                     System.out.println(StatHandler.getInfo());
-                } else{
+                } else {
                     System.out.println(StatHandler.getInfoWithColums());
                 }
-            }
+            } else if (cmd.equals("wipe")) {
+                if (arguments.contains("-confirm")) {
+                    StatHandler.generateFile();
+                    StatHandler.fileValuesToVariables();
+                    System.out.println("< byeee stats :P >");
+                } else {
+                    System.out.println("< WARNING, YOU NEED TO USE <wipe -confirm> TO WIPE >");
+                }
+            } else if (cmd.equals("guess") || containsChar(cmd)) {
 
-            else if (cmd.equals("guess") || containsChar(cmd)) {
-
-                if(cmd.equals("guess")){
-                    if(arguments.size()==1){
+                if (cmd.equals("guess")) {
+                    if (arguments.size() == 1) {
                         StringBuilder stringBuilder = new StringBuilder(arguments.toString());
-                        stringBuilder.delete(0,2);
-                        stringBuilder.deleteCharAt(stringBuilder.length()-1);
+                        stringBuilder.delete(0, 2);
+                        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 //                    System.out.println(stringBuilder);
 
                         String charName = stringBuilder.toString();
-                        if(containsChar(charName)){
+                        if (containsChar(charName)) {
                             solveFor(getCharFromString(charName));
-                        } else{
+                        } else {
                             System.out.println("< There is not a character with that name >");
                         }
-                    }
-                    else{
+                    } else {
                         System.out.println("<Too many arguments! > \n" +
                                 "< Execute help -guess for more info! >");
                     }
 
-                }
-
-                else{
+                } else {
                     solveFor(getCharFromString(cmd));
                 }
-            }
-
-            else {
+            } else {
                 System.out.println("Error in command!\n");
             }
         }
@@ -554,7 +492,8 @@ public class Game {
     static boolean end = false;
     static boolean quit = false;
     static List<String> quits = new ArrayList<>();
-    static{
+
+    static {
         quits.add("quit");
         quits.add("q");
         quits.add("end");
@@ -563,37 +502,35 @@ public class Game {
     }
 
     public static void main (String[] args) {
-//        repopulatePossible();
+
+        repopulatePossible();
+
         System.out.println("< Write <help> for info on commands >");
         boolean hasSeenTip = false;
         if (!StatHandler.isValuesLegit()) {
             System.out.println("Discrepancy in statics");
         }
         repopulatePossible();
-        while(!kill){
+        while (!kill) {
             hiddenCharacter = getRandomCharacter();
             commandHandler();
 
-            if(kill){
+            if (kill) {
                 break;
             }
             repopulatePossible();
 //            System.out.println(possibleNations);
 
-            if(!hasSeenTip){
+            if (!hasSeenTip) {
                 System.out.println("""
                         < NEW GAME has automatically started >
                         < Use <kill> to quit game >
                         < This will not print again >
                         """);
-                hasSeenTip=true;
+                hasSeenTip = true;
             }
 
         }
-
-
-
-
 
 
     }
