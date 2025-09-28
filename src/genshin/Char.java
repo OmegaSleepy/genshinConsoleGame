@@ -20,7 +20,6 @@ public class Char {
         this.isFiveStar = isFiveStar;
         this.isFemale = isFemale;
     }
-    Char (){}
     Char (String name, double version, Element element, Nation nation, Weapon weapon, boolean isFiveStar, boolean isFemale, String[] alternativeNames){
         this.name = name;
         this.version = version;
@@ -220,7 +219,4 @@ public class Char {
     public boolean hasAlternativeNames(){
         return !Arrays.equals(alternativeNames, new String[0]);
     }
-
-
-
 }

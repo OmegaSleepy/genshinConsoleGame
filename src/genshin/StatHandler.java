@@ -81,17 +81,19 @@ public class StatHandler {
     }
 
     static public String getInfo () {
-        return ("\nTotal games: " + totalGames + "\nWins/quits: " + wins + " / " + quits +
+        return ("<=====Statistics=====>" +
+                "\nTotal games: " + totalGames + "\nWins/quits: " + wins + " / " + quits +
                 "\nWins at tries:" +
                 "\n1: " + winsAt1 +
                 "\n2: " + winsAt2 +
                 "\n3: " + winsAt3 +
                 "\n4: " + winsAt4 +
                 "\n5: " + winsAt5 +
-                "\n>: " + winsAtMore);
+                "\n>: " + winsAtMore +
+                "\n<=====Statistics=====>\n");
     }
 
-    static int maxBars = 10;
+    static int maxBars = 15;
 
     static public int getMax(int[] numbs){
         int max = 0;
