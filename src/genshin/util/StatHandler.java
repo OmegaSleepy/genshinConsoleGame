@@ -1,4 +1,4 @@
-package genshin;
+package genshin.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,7 +30,7 @@ public class StatHandler {
     quits=0
     totalGames=0*/
 
-    static void fileValuesToVariables () {
+    public static void fileValuesToVariables () {
         Scanner scanner;
 
         try {
@@ -155,7 +155,9 @@ public class StatHandler {
         }
     }
 
-    static void generateFile () {
+    public static void generateFile () {
+        stats.delete();
+
         try {
             stats.createNewFile();
             FileWriter fillTheNewFile = new FileWriter(stats);
@@ -175,7 +177,7 @@ public class StatHandler {
 
     }
 
-    static boolean isValuesLegit () {
+    public static boolean isValuesLegit () {
         int sumOfWins = winsAt1 + winsAt2 + winsAt3 + winsAt4 + winsAt5 + winsAtMore;
         int sumOfQuitsWins = wins + quits;
         if (wins != sumOfWins) {
@@ -188,7 +190,7 @@ public class StatHandler {
         return true;
     }
 
-    static void writeValues (int score, boolean isWin, boolean isQuit) {
+    public static void writeValues (int score, boolean isWin, boolean isQuit) {
         totalGames++;
         if (isWin) {
             wins++;
