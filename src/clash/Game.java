@@ -3,6 +3,7 @@ package clash;
 import clash.util.Compare;
 import clash.util.Random;
 import clash.util.StatHandler;
+import genshin.Char;
 
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class Game {
         possibleTypes.add(Card.Type.SPELL);
         possibleTypes.add(Card.Type.BUILDING);
 
-        elixirMax = 10;
+        elixirMax = 11;
         elixirMin = 0;
 
     }
@@ -45,11 +46,17 @@ public class Game {
     }
 
     static Card getCharFromString (String name) {
-        return Holder.nameToCharacter.get(name.toLowerCase());
+        name = name.replace(" ", "_");
+        Card guess = Holder.nameToCharacter.get(name.toLowerCase());
+        if(guess.equals(null)){
+            return Card.SKELETONS;
+        }
+        return guess;
     }
 
     static boolean containsChar (String name) {
         name = name.toLowerCase();
+        name = name.replace(" ", "_");
         return Holder.nameToCharacter.containsKey(name);
     }
 
@@ -119,17 +126,6 @@ public class Game {
             // guess > hidden → hidden is lower
             if (guess.elixir-1 < elixirMax) elixirMax = guess.elixir;
         }
-
-
-//        if (Compare.Objects(guess.weapon, hiddenCharacter.weapon, "Weapon", objectTruthTable)) {
-//            possibleWeapons.clear();
-//            possibleWeapons.add(guess.weapon);
-//        } else {
-//            if(possibleWeapons.contains(guess.weapon)){
-//                possibleWeapons.remove(guess.weapon);
-//            }
-//        }
-
 
         System.out.println();
         return guess.equals(hiddenCharacter);
@@ -330,14 +326,14 @@ public class Game {
                 end = true;
                 quit = true;
                 System.out.printf("< You lost >\n< you quit (weak) > \n< character was %s >\n", hiddenCharacter.name);
-                StatHandler.writeValues(0, false, true);
+                genshin.util.StatHandler.writeValues(0, false, true);
                 break;
             } else if (cmd.equals("kill")) {
                 kill = true;
                 quit = true;
 
                 if (arguments.contains("-p")) {
-                    System.out.println(StatHandler.getInfoWithColums());
+                    System.out.println(genshin.util.StatHandler.getInfoWithColums());
                 }
 
                 break;
@@ -346,7 +342,6 @@ public class Game {
                     solveFor(solveRandom());
                 } else if (arguments.contains("-1")) {
 //                    solveFor(solveSmart());
-                    solveFor(solveRandom());
                 } else if (arguments.contains("-2")) {
                     solveFor(solveRandom());
                 } else if (arguments.contains("-3")) {
@@ -360,26 +355,25 @@ public class Game {
                 printHelp(arguments);
             } else if (cmd.equals("stats")) {
                 if (arguments.contains("-i")) {
-                    System.out.println(StatHandler.getInfo());
+                    System.out.println(genshin.util.StatHandler.getInfo());
                 } else {
-                    System.out.println(StatHandler.getInfoWithColums());
+                    System.out.println(genshin.util.StatHandler.getInfoWithColums());
                 }
             } else if (cmd.equals("wipe")) {
                 if (arguments.contains("-confirm")) {
-                    StatHandler.generateFile();
-                    StatHandler.fileValuesToVariables();
+                    genshin.util.StatHandler.generateFile();
+                    genshin.util.StatHandler.fileValuesToVariables();
                     System.out.println("< byeee stats :P >");
                 } else {
                     System.out.println("< WARNING, YOU NEED TO USE <wipe -confirm> TO WIPE >");
                 }
-            } else if (cmd.equals("guess") || containsChar(cmd)) {
+            } else if (cmd.equals("guess") || containsChar(command)) {
 
                 if (cmd.equals("guess")) {
                     if (arguments.size() == 1) {
                         StringBuilder stringBuilder = new StringBuilder(arguments.toString());
                         stringBuilder.delete(0, 2);
                         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-//                    System.out.println(stringBuilder);
 
                         String charName = stringBuilder.toString();
                         if (containsChar(charName)) {
@@ -393,14 +387,14 @@ public class Game {
                     }
 
                 } else {
-                    solveFor(getCharFromString(cmd));
+                    solveFor(getCharFromString(command));
                 }
             } else {
                 System.out.println("Error in command!\n");
             }
         }
         if (!quit) {
-            StatHandler.writeValues(score, true, false);
+            genshin.util.StatHandler.writeValues(score, true, false);
             System.out.println("\nWon in " + score + " attempts!");
         }
         end = true;

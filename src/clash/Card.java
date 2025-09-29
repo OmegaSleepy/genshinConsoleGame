@@ -3,19 +3,19 @@ package clash;
 import java.util.Arrays;
 
 public class Card {
-    public String[] alternativeNames;
+    public String[] alternativeNames = new String[0];
     String name;
     int elixir;
     Rarity rarity;
     Type type;
     int year;
 
-    Card (String name, int elixir, Rarity rarity, Type type, int year){
+    Card (String name, int elixir, Rarity rarity, Type type, String [] alternativeNames){
         this.name = name;
         this.elixir = elixir;
         this.rarity = rarity;
         this.type = type;
-        this.year = year;
+        this.alternativeNames = alternativeNames;
     }
     Card (String name, int elixir, Rarity rarity, Type type){
         this.name = name;
@@ -69,6 +69,50 @@ public class Card {
     final static Card CANNON = new Card("Cannon",3,Rarity.COMMON,Type.BUILDING);
     final static Card Mortar = new Card("Mortar",4,Rarity.COMMON,Type.BUILDING);
     final static Card TESLA = new Card("Tesla",4,Rarity.COMMON,Type.BUILDING);
+
+    //===RARE===
+
+    final static Card HEAL_SPIRIT = new Card("Heal Spirit",1,Rarity.RARE,Type.TROOP);
+    final static Card ICE_GOLEM = new Card("Ice Golem",2,Rarity.RARE,Type.TROOP);
+    final static Card SUSPICIOUS_BUSH = new Card("Suspicious Bush",2,Rarity.RARE,Type.TROOP);
+    final static Card MEGA_MINION = new Card("Mega Minion",3,Rarity.RARE,Type.TROOP);
+    final static Card DART_GOBLIN = new Card("Dart Goblin",3,Rarity.RARE,Type.TROOP);
+    final static Card ELIXIR_GOLEM = new Card("Elixir Golem",3,Rarity.RARE,Type.TROOP);
+    final static Card MINI_PEKKA = new Card("Mini PEKKA",4,Rarity.RARE,Type.TROOP);
+    final static Card MUSKETEER = new Card("Musketeer",4,Rarity.RARE,Type.TROOP);
+    final static Card VALKYRIE = new Card("Valkyrie",4,Rarity.RARE,Type.TROOP);
+    final static Card BATTLE_RAM = new Card("Battle Ram",4,Rarity.RARE,Type.TROOP);
+    final static Card FLYING_MACHINE = new Card("Flying Machine",4,Rarity.RARE,Type.TROOP);
+    final static Card HOG_RIDER = new Card("Hog Rider",4,Rarity.RARE,Type.TROOP);
+    final static Card BATTLE_HEALER = new Card("Battle Healer",4,Rarity.RARE,Type.TROOP,
+            new String[]{"Healer"});
+    final static Card FURNACE = new Card("Furnace",4,Rarity.RARE,Type.TROOP);
+    final static Card ZAPPIES = new Card("Zappies",4,Rarity.RARE,Type.TROOP);
+    final static Card GOBLIN_DEMOLISHER = new Card("Goblin Demolisher",4,Rarity.RARE,Type.TROOP);
+    final static Card GIANT = new Card("Giant",5,Rarity.RARE,Type.TROOP);
+    final static Card WIZARD = new Card("Wizard",5,Rarity.RARE,Type.TROOP);
+    final static Card ROYAL_HOGS = new Card("Royal Hogs",5,Rarity.RARE,Type.TROOP);
+    final static Card THREE_MUSKETEERS = new Card("Three Musketeers",9,Rarity.RARE,Type.TROOP);
+
+
+    final static Card EARTH_QUAKE = new Card("Earth Quake",3,Rarity.RARE,Type.TROOP);
+    final static Card FIRE_BALL = new Card("Fire Ball",4,Rarity.RARE,Type.BUILDING);
+    final static Card ROCKET = new Card("Rocket",6,Rarity.RARE,Type.BUILDING);
+
+
+    final static Card TOMB_STONE = new Card("Tomb Stone",3,Rarity.RARE,Type.BUILDING);
+    final static Card GOBLIN_HUT = new Card("Goblin Hut",4,Rarity.RARE,Type.BUILDING);
+    final static Card GOBLIN_CAGE = new Card("Goblin Cage",4,Rarity.RARE,Type.BUILDING);
+    final static Card BOMB_TOWER = new Card("Bomb Tower",4,Rarity.RARE,Type.BUILDING);
+    final static Card INFERNO_TOWER = new Card("Inferno Tower",5,Rarity.RARE,Type.BUILDING);
+    final static Card BARBARIAN_HUT = new Card("Barbarian Hut",6,Rarity.RARE,Type.BUILDING);
+    final static Card ELIXIR_PUMP = new Card("Elixir Pump",6,Rarity.RARE,Type.BUILDING);
+
+    //==EPIC==
+
+    final static Card BARBARIAN_BARREL = new Card("Barbarian Barrel",1,Rarity.RARE,Type.BUILDING);
+
+
 
     //===CHAMPIONS===
 

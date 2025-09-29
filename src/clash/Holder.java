@@ -23,10 +23,13 @@ public class Holder {
     public static Map<String, Card> nameToCharacter = new HashMap<>();
     static {
         for(Card hero: characters){
-            nameToCharacter.put(hero.name.toLowerCase(), hero);
-//            for (String name : hero.alternativeNames) {
-//                nameToCharacter.put(name.toLowerCase(),hero);
-//            }
+            String heroName = hero.name.toLowerCase();
+            heroName = heroName.replace(" ", "_");
+            nameToCharacter.put(heroName, hero);
+            for (String name : hero.alternativeNames) {
+                name = name.replace(" ", "_");
+                nameToCharacter.put(name.toLowerCase(),hero);
+            }
         }
     }
 
