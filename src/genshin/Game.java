@@ -25,7 +25,6 @@ public class Game {
     static short seed = 67;
     static List<Element> possibleElements = new ArrayList<>();
 
-    //TODO add a method to find the maxVersion from Holder.characters()
     static double maxVersion = getMaxVersion();
     static double minVersion = 1.0;
     static List<Weapon> possibleWeapons = new ArrayList<>();
@@ -235,12 +234,8 @@ public class Game {
 
         int versionStep = -1; // start below any real version
         System.out.println("\n< Possible characters >");
-        List<Char> possibleChar = new ArrayList<>();
-        for (Char c : Holder.characters) {
-            if (isIsPossible(c)) {
-                possibleChar.add(c);
-            }
-        }
+        List<Char> possibleChar = possibleCharacters(Holder.characters);
+
         System.out.printf("<Total possible %s>\n", possibleChar.size());
         for (Char c : possibleChar) {
             int majorVersion = (int) Math.floor(c.version);
@@ -260,12 +255,7 @@ public class Game {
 
     static Char solveSmart () {
         // collect all possible candidates
-        List<Char> possibleChar = new ArrayList<>();
-        for (Char c : Holder.characters) {
-            if (isIsPossible(c)) {
-                possibleChar.add(c);
-            }
-        }
+        List<Char> possibleChar = possibleCharacters(Holder.characters);
 
         System.out.printf("<Total possible %s>\n", possibleChar.size());
 
@@ -319,12 +309,7 @@ public class Game {
     }
 
     static Char solveRandom () {
-        List<Char> possibleChar = new ArrayList<>();
-        for (Char c : Holder.characters) {
-            if (isIsPossible(c)) {
-                possibleChar.add(c);
-            }
-        }
+        List<Char> possibleChar = possibleCharacters(Holder.characters);
         System.out.printf("<Total possible %s>\n", possibleChar.size());
         return possibleChar.get(new Random(seed).getRandomCapped(possibleChar.size()));
 
@@ -334,7 +319,6 @@ public class Game {
     static boolean kill = false;
 
     static String[] commands = {"guess", "help", "quit", "kill", "solve", "stats", "wipe", "possible"};
-
 
     static void printPossibleCommands () {
         System.out.println("< List of all commands > ");
@@ -482,27 +466,19 @@ public class Game {
         end = true;
     }
 
-    private static boolean isIsPossible (Char c) {
-        boolean isPossible = true;
-        if (nonNames.contains(c.name)) {
-            isPossible = false;
-        } else if (!possibleWeapons.contains(c.weapon)) {
-            isPossible = false;
-        } else if (!possibleNations.contains(c.nation)) {
-            isPossible = false;
-        } else if (!possibleElements.contains(c.element)) {
-            isPossible = false;
-        } else if (c.version < minVersion || c.version > maxVersion) {
-            isPossible = false;
-        } else if (!isHard) {
-            if (c.isFemale != isFemale & !isFirstRound) {
-                isPossible = false;
-            } else if (isFiveStar != c.isFiveStar & !isFirstRound) {
-                isPossible = false;
-            }
-        }
+    private static List<Char> possibleCharacters(List<Char> normal){
+        List<Char> possible = new ArrayList<>();
 
-        return isPossible;
+        normal.stream()
+                .filter(character -> !nonNames.contains(character.name))
+                .filter(character -> possibleWeapons.contains(character.weapon))
+                .filter(character -> possibleNations.contains(character.nation))
+                .filter(character -> possibleElements.contains(character.element))
+                .filter(character -> character.version > minVersion)
+                .filter(character -> character.version < maxVersion)
+                .forEach(possible::add);
+
+        return possible;
     }
 
     static boolean end = false;
