@@ -1,0 +1,5 @@
+package genshin;
+
+public enum Nation {
+    MONSTADT, LIYUE, INAZUMA, SUMERU, FONTAINE, NATLAN, NOD_KRAI, SNEZHNAYA, OUTSIDE
+}

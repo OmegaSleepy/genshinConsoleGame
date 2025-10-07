@@ -11,16 +11,11 @@ public class Char {
     boolean isFiveStar;
     boolean isFemale;
     String[] alternativeNames = new String[0];
-    Char (String name, double version, genshin.Element element, genshin.Nation nation, genshin.Weapon weapon, boolean isFiveStar, boolean isFemale){
-        this.name = name;
-        this.version = version;
-        this.element = element;
-        this.nation = nation;
-        this.weapon = weapon;
-        this.isFiveStar = isFiveStar;
-        this.isFemale = isFemale;
+    private Char (String name, double version, genshin.Element element, genshin.Nation nation, genshin.Weapon weapon, boolean isFiveStar, boolean isFemale){
+        this(name,version,element,nation,weapon,isFiveStar,isFemale,new String[0]);
     }
-    Char (String name, double version, genshin.Element element, genshin.Nation nation, genshin.Weapon weapon, boolean isFiveStar, boolean isFemale, String[] alternativeNames){
+
+    private Char (String name, double version, genshin.Element element, genshin.Nation nation, genshin.Weapon weapon, boolean isFiveStar, boolean isFemale, String[] alternativeNames){
         this.name = name;
         this.version = version;
         this.element = element;

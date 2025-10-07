@@ -5,18 +5,7 @@ import genshin.util.Random;
 import genshin.util.StatHandler;
 
 import java.util.*;
-
-enum Element {
-    PYRO, CRYO, HYDRO, ELECTRO, GEO, ANEMO, DENTRO
-}
-
-enum Nation {
-    MONSTADT, LIYUE, INAZUMA, SUMERU, FONTAINE, NATLAN, NOD_KRAI, SNEZHNAYA, OUTSIDE
-}
-
-enum Weapon {
-    POLEARM, CLAYMORE, CATALYST, BOW, SWORD
-}
+import java.util.function.Consumer;
 
 
 public class Game {
@@ -37,6 +26,8 @@ public class Game {
     static boolean isFirstRound = true;
 
     static List<String> nonNames = new ArrayList<>();
+
+    static Consumer<String> printINFO = string -> System.out.println("< " + string + " >");
 
     static double getMaxVersion(){
         double max = 1;
@@ -193,60 +184,55 @@ public class Game {
 
     static void printPossibleCharacters () {
         Holder.sortByVersion();
-        System.out.println("<========Help========>");
-        System.out.print("< Possible Weapons: ");
+        printINFO.accept("========Help========");
+        printINFO.accept("Possible Weapons:");
         for (Weapon weapon : possibleWeapons) {
             System.out.print(weapon + " ");
         }
-        System.out.println(">\n");
-        System.out.print("< Possible Nations: ");
+        System.out.println();
+        printINFO.accept("Possible Nations:");
         for (Nation nation : possibleNations) {
             System.out.print(nation + " ");
         }
-        System.out.println(">\n");
-        System.out.print("< Possible Elements: ");
+        System.out.println();
+        printINFO.accept("Possible Elements:");
         for (Element element : possibleElements) {
             System.out.print(element + " ");
         }
-        System.out.print(">\n");
-        System.out.println("< Version range: ( " + minVersion + " < version < " + maxVersion +
-                " ) >");
-
+        System.out.println();
+        printINFO.accept("Version range: ( " + minVersion + " < version < " + maxVersion + " )");
 
         if (!isHard) {
-            System.out.print("< Gender - ");
             if (isFemale) {
-                System.out.print(" 👩 Female");
+                printINFO.accept("Gender - 👩 Female");
             } else {
-                System.out.print(" 👨 Male");
+                printINFO.accept("Gender - 👨 Male");
             }
-            System.out.print(" >\n");
 
-            System.out.print("< Rarity - ");
             if (isFiveStar) {
-                System.out.print(" 5⭐");
+                printINFO.accept("Rarity - 5⭐");
             } else {
-                System.out.print(" 4⭐");
+                printINFO.accept("Rarity - 4⭐");
             }
-            System.out.print(" >\n");
 
         }
 
         int versionStep = -1; // start below any real version
-        System.out.println("\n< Possible characters >");
+        System.out.println();
+        printINFO.accept("Possible characters");
         List<Char> possibleChar = possibleCharacters(Holder.characters);
 
-        System.out.printf("<Total possible %s>\n", possibleChar.size());
+        printINFO.accept("Total possible " + possibleChar.size());
         for (Char c : possibleChar) {
             int majorVersion = (int) Math.floor(c.version);
             if (majorVersion > versionStep) {
                 System.out.printf("\n<%d.X>\n", majorVersion);
                 versionStep = majorVersion; // sync with actual version
             }
-            System.out.printf("<%s>\n", c.name);
+            printINFO.accept(c.name);
         }
 
-        System.out.println("<========Help========>");
+        printINFO.accept("========Help========");
         System.out.println();
     }
 
@@ -321,9 +307,9 @@ public class Game {
     static String[] commands = {"guess", "help", "quit", "kill", "solve", "stats", "wipe", "possible"};
 
     static void printPossibleCommands () {
-        System.out.println("< List of all commands > ");
-        System.out.println(Arrays.toString(commands));
-        System.out.println("\n< Help for specific command: help -command >");
+        printINFO.accept("List of all commands");
+        printINFO.accept(Arrays.toString(commands));
+        printINFO.accept("Help for specific command: help -command");
     }
 
     static void printHelp (List<String> arguments) {
@@ -391,7 +377,10 @@ public class Game {
             if (quits.contains(cmd.toLowerCase())) {
                 end = true;
                 quit = true;
-                System.out.printf("< You lost >\n< you quit (weak) > \n< character was %s >\n", hiddenCharacter.name);
+                printINFO.accept("You lost");
+                printINFO.accept("you quit (weak)");
+                printINFO.accept("character was");
+                printINFO.accept(hiddenCharacter.name);
                 StatHandler.writeValues(0, false, true);
                 break;
             } else if (cmd.equals("kill")) {
@@ -429,9 +418,9 @@ public class Game {
                 if (arguments.contains("-confirm")) {
                     StatHandler.generateFile();
                     StatHandler.fileValuesToVariables();
-                    System.out.println("< byeee stats :P >");
+                    printINFO.accept("byeee stats :P");
                 } else {
-                    System.out.println("< WARNING, YOU NEED TO USE <wipe -confirm> TO WIPE >");
+                    printINFO.accept("WARNING, YOU NEED TO USE <wipe -confirm> TO WIPE");
                 }
             } else if (cmd.equals("guess") || containsChar(command)) {
 
@@ -445,11 +434,11 @@ public class Game {
                         if (containsChar(charName)) {
                             solveFor(getCharFromString(charName));
                         } else {
-                            System.out.println("< There is not a character with that name >");
+                            printINFO.accept("There is not a character with that name");
                         }
                     } else {
-                        System.out.println("<Too many arguments! > \n" +
-                                "< Execute help -guess for more info! >");
+                        printINFO.accept("Too many arguments!");
+                        printINFO.accept("Execute help -guess for more info!");
                     }
 
                 } else {
@@ -497,10 +486,10 @@ public class Game {
 
         repopulatePossible();
 
-        System.out.println("< Write <help> for info on commands >");
+        printINFO.accept("Write <help> for info on commands");
         boolean hasSeenTip = false;
         if (!StatHandler.isValuesLegit()) {
-            System.out.println("Discrepancy in statics");
+            printINFO.accept("Discrepancy in statics");
         }
         repopulatePossible();
         while (!kill) {
@@ -513,11 +502,9 @@ public class Game {
             repopulatePossible();
 
             if (!hasSeenTip) {
-                System.out.println("""
-                        < NEW GAME has automatically started >
-                        < Use <kill> to quit game >
-                        < This will not print again >
-                        """);
+                printINFO.accept("NEW GAME has automatically started");
+                printINFO.accept("Use <kill> to quit game");
+                printINFO.accept("This will not print again");
                 hasSeenTip = true;
             }
 
