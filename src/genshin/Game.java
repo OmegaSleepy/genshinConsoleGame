@@ -4,11 +4,17 @@ import genshin.util.Compare;
 import genshin.util.Random;
 import genshin.util.StatHandler;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 
 public class Game {
+    /**
+     * Used to switch between "hard" and non-hard mode, the difference is in the amount of hints
+     * @deprecated **/
+    @Deprecated
     static boolean isHard = true;
 
     static short seed = 67;
@@ -20,8 +26,6 @@ public class Game {
 
     static List<Nation> possibleNations = new ArrayList<>();
 
-    static boolean isFemale;
-    static boolean isFiveStar;
 
     static boolean isFirstRound = true;
 
@@ -59,8 +63,6 @@ public class Game {
         possibleWeapons.add(Weapon.CATALYST);
         possibleWeapons.add(Weapon.POLEARM);
 
-        isFemale = false;
-        isFiveStar = false;
 
         isFirstRound = true;
 
@@ -202,21 +204,6 @@ public class Game {
         System.out.println();
         printINFO.accept("Version range: ( " + minVersion + " < version < " + maxVersion + " )");
 
-        if (!isHard) {
-            if (isFemale) {
-                printINFO.accept("Gender - 👩 Female");
-            } else {
-                printINFO.accept("Gender - 👨 Male");
-            }
-
-            if (isFiveStar) {
-                printINFO.accept("Rarity - 5⭐");
-            } else {
-                printINFO.accept("Rarity - 4⭐");
-            }
-
-        }
-
         int versionStep = -1; // start below any real version
         System.out.println();
         printINFO.accept("Possible characters");
@@ -239,6 +226,12 @@ public class Game {
 
     //===SOLVING ALGORITHMS===
 
+    /**
+     * Solving algorithm thought of ChatGPT
+     * @return {@code Char}
+     * @since 1.3
+     * @see #solveRandom()
+     * **/
     static Char solveSmart () {
         // collect all possible candidates
         List<Char> possibleChar = possibleCharacters(Holder.characters);
@@ -294,13 +287,20 @@ public class Game {
         return best;
     }
 
+
+
+    /**
+     * Solving algorithm based on total randomness
+     * @return {@code Char}
+     * @since 1.1
+     * @see #solveSmart()
+     * **/
     static Char solveRandom () {
         List<Char> possibleChar = possibleCharacters(Holder.characters);
         System.out.printf("<Total possible %s>\n", possibleChar.size());
         return possibleChar.get(new Random(seed).getRandomCapped(possibleChar.size()));
 
     }
-
 
     static boolean kill = false;
 
@@ -348,6 +348,10 @@ public class Game {
         }
     }
 
+    /**
+     * Main logic for checking if a character is the {@code hiddenCharacter}
+     * **/
+
     static void solveFor (Char test) {
         if (compareCharacterS(test)) {
             end = true;
@@ -356,6 +360,10 @@ public class Game {
             score++;
         }
     }
+
+    /**
+     * Is the current score of the current game
+     * **/
 
     static int score = 1;
 
@@ -455,6 +463,9 @@ public class Game {
         end = true;
     }
 
+    /**
+     * Calculates all possible final fields of {@code Char}
+     * **/
     private static List<Char> possibleCharacters(List<Char> normal){
         List<Char> possible = new ArrayList<>();
 
@@ -470,8 +481,21 @@ public class Game {
         return possible;
     }
 
-    static boolean end = false;
-    static boolean quit = false;
+    /**
+     * This represents weather or not the current run is over or not
+     * **/
+    private static boolean end = false;
+
+    /**
+     * This represents weather or not the current game
+     * is aborted by the user or not
+     * **/
+    private static boolean quit = false;
+
+
+    /**
+     * List of all possible abort commands that the user can execute
+     * **/
     static List<String> quits = new ArrayList<>();
 
     static {

@@ -1,6 +1,11 @@
 package genshin;
 
+import genshin.util.Tier;
+
 import java.util.Arrays;
+import java.util.Objects;
+
+import static genshin.Element.HYDRO;
 
 public class Char {
     String name;
@@ -8,14 +13,29 @@ public class Char {
     genshin.Element element;
     genshin.Nation nation;
     genshin.Weapon weapon;
+
+    @Deprecated
     boolean isFiveStar;
+    @Deprecated
     boolean isFemale;
-    String[] alternativeNames = new String[0];
+    String[] alternativeNames;
+
+
+    private Char(String name, double version, genshin.Element element, genshin.Nation nation, genshin.Weapon weapon){
+        this(name,version,element,nation,weapon,false,false,new String[0]);
+    }
+
     private Char (String name, double version, genshin.Element element, genshin.Nation nation, genshin.Weapon weapon, boolean isFiveStar, boolean isFemale){
         this(name,version,element,nation,weapon,isFiveStar,isFemale,new String[0]);
     }
 
-    private Char (String name, double version, genshin.Element element, genshin.Nation nation, genshin.Weapon weapon, boolean isFiveStar, boolean isFemale, String[] alternativeNames){
+    private Char (String name, double version, genshin.Element element, genshin.Nation nation, genshin.Weapon weapon,
+                  boolean isFiveStar, boolean isFemale, String[] alternativeNames){
+        this(name,version,element,nation,weapon,isFiveStar,isFemale,alternativeNames, null);
+    }
+
+    private Char (String name, double version, genshin.Element element, genshin.Nation nation,
+                  genshin.Weapon weapon, boolean isFiveStar, boolean isFemale, String[] alternativeNames, Tier tier){
         this.name = name;
         this.version = version;
         this.element = element;
@@ -25,11 +45,7 @@ public class Char {
         this.isFemale = isFemale;
         this.alternativeNames = alternativeNames;
     }
-    //===OUTSIDE===//
 
-    static final Char ALOY = new Char("Aloy", 2.1, genshin.Element.CRYO, genshin.Nation.OUTSIDE, genshin.Weapon.BOW, true, true,
-            new String[]{"Alloy"});
-    static final Char SKIRK = new Char("Skirk", 5.7, genshin.Element.CRYO, genshin.Nation.OUTSIDE, genshin.Weapon.SWORD, true, true);
 
     //===MONSTADT===//
 
@@ -41,7 +57,7 @@ public class Char {
     static final Char LISA = new Char("Lisa", 1.0, genshin.Element.ELECTRO, genshin.Nation.MONSTADT, genshin.Weapon.CATALYST, false, true);
     static final Char FISCHL = new Char("Fischl", 1.0, genshin.Element.ELECTRO, genshin.Nation.MONSTADT, genshin.Weapon.BOW, false, true,
             new String[]{"Fisc","Fish","Fishl"});
-    static final Char BARBARA = new Char("Barbara", 1.0, genshin.Element.HYDRO, genshin.Nation.MONSTADT, genshin.Weapon.CATALYST, false, true);
+    static final Char BARBARA = new Char("Barbara", 1.0, HYDRO, genshin.Nation.MONSTADT, genshin.Weapon.CATALYST, false, true);
     static final Char BENNETT = new Char("Bennett", 1.0, genshin.Element.PYRO, genshin.Nation.MONSTADT, genshin.Weapon.SWORD, false, false,
             new String[]{"Ben Ten"});
     static final Char AMBER = new Char("Amber", 1.0, genshin.Element.PYRO, genshin.Nation.MONSTADT, genshin.Weapon.BOW, false, true);
@@ -49,11 +65,11 @@ public class Char {
     static final Char ROSALIA = new Char("Rosalia", 1.4, genshin.Element.CRYO, genshin.Nation.MONSTADT, genshin.Weapon.POLEARM, false, true,
             new String[]{"Rozalia","Roza","Rosa"});
     static final Char MIKA = new Char("Mika", 3.5, genshin.Element.CRYO, genshin.Nation.MONSTADT, genshin.Weapon.POLEARM, false, false);
-    static final Char DAHLIA = new Char("Dahlia", 5.7, genshin.Element.HYDRO, genshin.Nation.MONSTADT, genshin.Weapon.SWORD, false, false);
+    static final Char DAHLIA = new Char("Dahlia", 5.7, HYDRO, genshin.Nation.MONSTADT, genshin.Weapon.SWORD, false, false);
 
     static final Char VENTI = new Char("Venti", 1.0, genshin.Element.ANEMO, genshin.Nation.MONSTADT, genshin.Weapon.BOW, true, false);
     static final Char JEAN = new Char("Jean", 1.0, genshin.Element.ANEMO, genshin.Nation.MONSTADT, genshin.Weapon.SWORD, true, true);
-    static final Char MONA = new Char("Mona", 1.0, genshin.Element.HYDRO, genshin.Nation.MONSTADT, genshin.Weapon.CATALYST, true, true);
+    static final Char MONA = new Char("Mona", 1.0, HYDRO, genshin.Nation.MONSTADT, genshin.Weapon.CATALYST, true, true);
     static final Char KLEE = new Char("Klee", 1.0, genshin.Element.PYRO, genshin.Nation.MONSTADT, genshin.Weapon.CATALYST, true, true,
             new String[]{"Kle"});
     static final Char DILUC = new Char("Diluc", 1.0, genshin.Element.PYRO, genshin.Nation.MONSTADT, genshin.Weapon.CLAYMORE, true, false);
@@ -68,7 +84,7 @@ public class Char {
     static final Char CHONGYUN = new Char("Chongyun", 1.0, genshin.Element.CRYO, genshin.Nation.LIYUE, genshin.Weapon.CLAYMORE, false, false);
     static final Char BEIDOU = new Char("Beidou", 1.0, genshin.Element.ELECTRO, genshin.Nation.LIYUE, genshin.Weapon.CLAYMORE, false, true);
     static final Char XIANGLING = new Char("Xiangling", 1.0, genshin.Element.PYRO, genshin.Nation.LIYUE, genshin.Weapon.POLEARM, false, true);
-    static final Char XINGQIU = new Char("Xingqiu", 1.0, genshin.Element.HYDRO, genshin.Nation.LIYUE, genshin.Weapon.SWORD, false,false,
+    static final Char XINGQIU = new Char("Xingqiu", 1.0, HYDRO, genshin.Nation.LIYUE, genshin.Weapon.SWORD, false,false,
             new String[]{"Xingqui"});
     static final Char XIANYAN = new Char("Xianyan", 1.1, genshin.Element.PYRO, genshin.Nation.LIYUE, genshin.Weapon.CLAYMORE, false, true);
     static final Char YAN_FEI = new Char("Yan Fei", 1.5, genshin.Element.PYRO, genshin.Nation.LIYUE, genshin.Weapon.CATALYST, false, true,
@@ -88,7 +104,7 @@ public class Char {
     static final Char HU_TAO = new Char("Hu Tao", 1.3, genshin.Element.PYRO, genshin.Nation.LIYUE, genshin.Weapon.POLEARM, true, true);
     static final Char XIAO = new Char("Xiao", 1.3, genshin.Element.ANEMO, genshin.Nation.LIYUE, genshin.Weapon.POLEARM, true, false);
     static final Char SHENHE = new Char("Shenhe", 2.4, genshin.Element.CRYO, genshin.Nation.LIYUE, genshin.Weapon.POLEARM, true,true);
-    static final Char YELAN = new Char("Yelan", 2.7, genshin.Element.HYDRO, genshin.Nation.LIYUE, genshin.Weapon.BOW, true,true);
+    static final Char YELAN = new Char("Yelan", 2.7, HYDRO, genshin.Nation.LIYUE, genshin.Weapon.BOW, true,true);
     static final Char BAIZHU = new Char("Baizhu", 3.6, genshin.Element.DENTRO, genshin.Nation.LIYUE, genshin.Weapon.CATALYST, true,false);
     static final Char XIANYUN = new Char("Xianyun", 4.4, genshin.Element.ANEMO, genshin.Nation.LIYUE, genshin.Weapon.CATALYST, true,true);
     static final Char CALEDON_MARE = new Char("Caledon Mare", 6.3, genshin.Element.ANEMO, genshin.Nation.LIYUE, genshin.Weapon.BOW, true,true,
@@ -96,7 +112,7 @@ public class Char {
 
     //===SNEZHNAYA===
 
-    static final Char TARTAGLIA = new Char("Tartaglia", 1.1, genshin.Element.HYDRO, genshin.Nation.SNEZHNAYA, genshin.Weapon.BOW, true, false,
+    static final Char TARTAGLIA = new Char("Tartaglia", 1.1, HYDRO, genshin.Nation.SNEZHNAYA, genshin.Weapon.BOW, true, false,
             new String[]{"Childe", "Ajax"});
     static final Char ARLECCHINO = new Char("Arlecchino", 4.6, genshin.Element.PYRO, genshin.Nation.SNEZHNAYA, genshin.Weapon.POLEARM, true, true,
             new String[]{"Perier", "The Knave", "Father", "Peruere", "Arle", "Arlechino"});
@@ -115,20 +131,20 @@ public class Char {
             new String[]{"Heizhou","Shikanoin"});
     static final Char KIRARA = new Char("Kirara", 3.7, genshin.Element.DENTRO, genshin.Nation.INAZUMA, genshin.Weapon.SWORD, false,true);
 
-    static final Char KAEDAHA_KAZUHA = new Char("Kaedaha Kazuha", 1.6, genshin.Element.ANEMO, genshin.Nation.INAZUMA, genshin.Weapon.SWORD, true, false,
-            new String[]{"Kazuha"});
+    static final Char KAEDAHARA_KAZUHA = new Char("Kaedehara Kazuha", 1.6, genshin.Element.ANEMO, genshin.Nation.INAZUMA, genshin.Weapon.SWORD, true, false,
+            new String[]{"Kazuha","Kazu","Kaedahara"});
     static final Char YOIMIYA = new Char("Yoimiya", 2.0, genshin.Element.PYRO, genshin.Nation.INAZUMA, genshin.Weapon.BOW, true,true);
     static final Char KAMISATO_AYAKA = new Char("Kamisato Ayaka", 2.0, genshin.Element.CRYO, genshin.Nation.INAZUMA, genshin.Weapon.SWORD, true, true,
             new String[]{"Ayaka"});
     static final Char RAIDEN_SHOGUN = new Char("Raiden Shogun", 2.1, genshin.Element.ELECTRO, genshin.Nation.INAZUMA, genshin.Weapon.POLEARM, true, true,
             new String[]{"Raiden","Ei"});
-    static final Char SANGONOMIYA_KOKOMI = new Char("Sangonomiya Kokomi", 2.1, genshin.Element.HYDRO, genshin.Nation.INAZUMA, genshin.Weapon.CATALYST, true, true,
+    static final Char SANGONOMIYA_KOKOMI = new Char("Sangonomiya Kokomi", 2.1, HYDRO, genshin.Nation.INAZUMA, genshin.Weapon.CATALYST, true, true,
             new String[]{"Kokomi"});
     static final Char ARATAKI_ITTO = new Char("Arataki Itto", 2.3, genshin.Element.GEO, genshin.Nation.INAZUMA, genshin.Weapon.CLAYMORE, true, false,
             new String[]{"Itto","Arataki"});
     static final Char YAE_MIKO = new Char("Yae Miko", 2.5, genshin.Element.ELECTRO, genshin.Nation.INAZUMA, genshin.Weapon.CATALYST, true, true,
             new String[]{"Yae","Miko"});
-    static final Char KAMISATO_AYATO = new Char("Kamisato Ayato", 2.6, genshin.Element.HYDRO, genshin.Nation.INAZUMA, genshin.Weapon.SWORD, true, false,
+    static final Char KAMISATO_AYATO = new Char("Kamisato Ayato", 2.6, HYDRO, genshin.Nation.INAZUMA, genshin.Weapon.SWORD, true, false,
             new String[]{"Ayato"});
     static final Char CHIORI = new Char("Chiori", 4.5, genshin.Element.GEO, genshin.Nation.INAZUMA, genshin.Weapon.SWORD, true, true);
     static final Char YUMEMIZUKI_MIZUKI = new Char("Yumemizuki Mizuki", 5.4, genshin.Element.ANEMO, genshin.Nation.INAZUMA, genshin.Weapon.CATALYST, true, true,
@@ -144,7 +160,7 @@ public class Char {
 
     static final Char COLLEI = new Char("Collei", 3.0, genshin.Element.DENTRO, genshin.Nation.SUMERU, genshin.Weapon.BOW, false, true);
     static final Char DORI = new Char("Dori", 3.0, genshin.Element.ELECTRO, genshin.Nation.SUMERU, genshin.Weapon.CLAYMORE, false, true);
-    static final Char CANDACE = new Char("Candace", 3.1, genshin.Element.HYDRO, genshin.Nation.SUMERU, genshin.Weapon.POLEARM, false, true);
+    static final Char CANDACE = new Char("Candace", 3.1, HYDRO, genshin.Nation.SUMERU, genshin.Weapon.POLEARM, false, true);
     static final Char LAYLA = new Char("Layla", 3.2, genshin.Element.CRYO, genshin.Nation.SUMERU, genshin.Weapon.SWORD, false, true);
     static final Char FARUZAN = new Char("Faruzan", 3.3, genshin.Element.ANEMO, genshin.Nation.SUMERU, genshin.Weapon.BOW, false, true);
     static final Char KAVEH = new Char("Kaveh", 3.6, genshin.Element.DENTRO, genshin.Nation.SUMERU, genshin.Weapon.CLAYMORE, false, false);
@@ -153,7 +169,7 @@ public class Char {
     static final Char TIGHNARI = new Char("Tighnari", 3.0, genshin.Element.DENTRO, genshin.Nation.SUMERU, genshin.Weapon.BOW, true, false,
             new String[]{"Tigh"});
     static final Char CYNO = new Char("Cyno", 3.1, genshin.Element.ELECTRO, genshin.Nation.SUMERU, genshin.Weapon.POLEARM, true, false);
-    static final Char NILOU = new Char("Nilou", 3.1, genshin.Element.HYDRO, genshin.Nation.SUMERU, genshin.Weapon.SWORD, true, true);
+    static final Char NILOU = new Char("Nilou", 3.1, HYDRO, genshin.Nation.SUMERU, genshin.Weapon.SWORD, true, true);
     static final Char NAHIDA = new Char("Nahida", 3.2, genshin.Element.DENTRO, genshin.Nation.SUMERU, genshin.Weapon.CATALYST, true, true);
     static final Char WANDERER = new Char("Wanderer", 3.3, genshin.Element.ANEMO, genshin.Nation.SUMERU, genshin.Weapon.CATALYST, true, false);
     static final Char ALHAITHAM = new Char("Alhaitham", 3.4, genshin.Element.DENTRO, genshin.Nation.SUMERU, genshin.Weapon.SWORD, true,false);
@@ -169,14 +185,14 @@ public class Char {
 
     static final Char LYNEY = new Char("Lyney", 4.0, genshin.Element.PYRO, genshin.Nation.FONTAINE, genshin.Weapon.BOW, true,false,
             new String[]{"Lini"});
-    static final Char NEUVILLETTE = new Char("Neuvillette", 4.1, genshin.Element.HYDRO, genshin.Nation.FONTAINE, genshin.Weapon.CATALYST, true,false,
+    static final Char NEUVILLETTE = new Char("Neuvillette", 4.1, HYDRO, genshin.Nation.FONTAINE, genshin.Weapon.CATALYST, true,false,
             new String[]{"Neuv"});
     static final Char WRIOTHESLEY = new Char("Wriothesley", 4.1, genshin.Element.CRYO, genshin.Nation.FONTAINE, genshin.Weapon.CATALYST, true,false,
             new String[]{"Wrio"});
-    static final Char FURINA = new Char("Furina", 4.2, genshin.Element.HYDRO, genshin.Nation.FONTAINE, genshin.Weapon.SWORD, true,true);
+    static final Char FURINA = new Char("Furina", 4.2, HYDRO, genshin.Nation.FONTAINE, genshin.Weapon.SWORD, true,true);
     static final Char NAVIA = new Char("Navia", 4.3, genshin.Element.GEO, genshin.Nation.FONTAINE, genshin.Weapon.CLAYMORE, true,true);
     static final Char CLORINDE = new Char("Clorinde", 4.7, genshin.Element.ELECTRO, genshin.Nation.FONTAINE, genshin.Weapon.SWORD, true,true);
-    static final Char SIGEWINNE = new Char("Sigewinne", 4.7, genshin.Element.HYDRO, genshin.Nation.FONTAINE, genshin.Weapon.BOW, true,true);
+    static final Char SIGEWINNE = new Char("Sigewinne", 4.7, HYDRO, genshin.Nation.FONTAINE, genshin.Weapon.BOW, true,true);
     static final Char EMILIE = new Char("Emilie", 4.8, genshin.Element.DENTRO, genshin.Nation.FONTAINE, genshin.Weapon.POLEARM, true,true,
             new String[]{"Emili","Emy","Emily","Emi","Emyly","Emylie"});
     static final Char ESCOFFIER = new Char("Escoffier", 5.6, genshin.Element.CRYO, genshin.Nation.FONTAINE, genshin.Weapon.POLEARM, true,true,
@@ -190,7 +206,7 @@ public class Char {
     static final Char IANSAN = new Char("Iansan", 5.5, genshin.Element.ELECTRO, genshin.Nation.NATLAN, genshin.Weapon.POLEARM, false,true);
     static final Char IFA = new Char("Ifa", 5.6, genshin.Element.ANEMO, genshin.Nation.NATLAN, genshin.Weapon.CATALYST, false,false);
 
-    static final Char MUALANI = new Char("Mualani", 5.0, genshin.Element.HYDRO, genshin.Nation.NATLAN, genshin.Weapon.CATALYST, true,true,
+    static final Char MUALANI = new Char("Mualani", 5.0, HYDRO, genshin.Nation.NATLAN, genshin.Weapon.CATALYST, true,true,
             new String[]{"lani","mua"});
     static final Char KINICH = new Char("Kinich", 5.0, genshin.Element.DENTRO, genshin.Nation.NATLAN, genshin.Weapon.CLAYMORE, true,false);
     static final Char XILONEN = new Char("Xilonen", 5.1, genshin.Element.GEO, genshin.Nation.NATLAN, genshin.Weapon.SWORD, true,true);
@@ -203,7 +219,7 @@ public class Char {
 
     //===NOD KRAI===
 
-    static final Char AINO = new Char("Aino", 6.0, genshin.Element.HYDRO, genshin.Nation.NOD_KRAI, genshin.Weapon.CLAYMORE, false,true);
+    static final Char AINO = new Char("Aino", 6.0, HYDRO, genshin.Nation.NOD_KRAI, genshin.Weapon.CLAYMORE, false,true);
     static final Char JAHODA = new Char("Jahoda", 6.2, genshin.Element.ANEMO, genshin.Nation.NOD_KRAI, genshin.Weapon.BOW, false,true);
 
     static final Char INEFFA = new Char("Ineffa", 5.8, genshin.Element.ELECTRO, genshin.Nation.NOD_KRAI, genshin.Weapon.POLEARM, true,true);
@@ -211,7 +227,7 @@ public class Char {
     static final Char KYRRYL_CHUDOMIROVICH_FLINS = new Char("Kyrryl Chudomirovich Flins", 6.0, genshin.Element.ELECTRO, genshin.Nation.NOD_KRAI, genshin.Weapon.POLEARM, true,false,
             new String[] {"Flins","Kiril","Kyrryl","Chudomirovich", "Gojo", "Metodii", "Lamp"});
     static final Char NEFER = new Char("Nefer", 6.1, genshin.Element.DENTRO, genshin.Nation.NOD_KRAI, genshin.Weapon.CATALYST, true,true);
-    static final Char COLUMBINA = new Char("Columbina", 6.3, genshin.Element.HYDRO, genshin.Nation.NOD_KRAI, genshin.Weapon.POLEARM, true,true);
+    static final Char COLUMBINA = new Char("Columbina", 6.3, HYDRO, genshin.Nation.NOD_KRAI, genshin.Weapon.POLEARM, true,true);
 
     @Override
     public String toString () {
@@ -219,6 +235,53 @@ public class Char {
     }
     public boolean hasAlternativeNames(){
         return !Arrays.equals(alternativeNames, new String[0]);
+    }
+
+    public String toEnum(){
+
+        StringBuilder newEnum = new StringBuilder();
+        newEnum.append(name.replaceAll(" ", "_").toUpperCase());
+
+        newEnum.append("(");
+
+        newEnum.append("\"").append(name).append("\"").append(",");
+        newEnum.append(version).append(",");
+        newEnum.append(element).append(",");
+        newEnum.append(nation).append(",");
+        newEnum.append(weapon).append(",");
+        newEnum.append(isFiveStar).append(",");
+
+
+        newEnum.append(isFemale).append(",");
+
+        if(this.alternativeNames.length != 0){
+            newEnum.append("new String[] {");
+            for(String string: alternativeNames){
+                newEnum.append("\"").append(string).append("\"");
+
+                if(!Objects.equals(alternativeNames[alternativeNames.length - 1], string)){
+                    newEnum.append(",");
+                }
+
+            }
+            newEnum.append("}");
+
+        } else{
+            newEnum.deleteCharAt(newEnum.length()-1);
+        }
+
+
+        newEnum.append("),");
+        return newEnum.toString();
+    }
+
+
+    public static void main (String[] args) {
+
+        for(Char character: Holder.characters){
+            System.out.println(character.toEnum());
+        }
+
     }
 
 }
