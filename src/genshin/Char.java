@@ -134,6 +134,12 @@ public class Char {
     static final Char YUMEMIZUKI_MIZUKI = new Char("Yumemizuki Mizuki", 5.4, genshin.Element.ANEMO, genshin.Nation.INAZUMA, genshin.Weapon.CATALYST, true, true,
             new String[]{"Mizuki"});
 
+    //===OUTSIDE===//
+
+    static final Char ALOY = new Char("Aloy", 2.1, genshin.Element.CRYO, genshin.Nation.OUTSIDE, genshin.Weapon.BOW, true, true,
+            new String[]{"Alloy"}, Tier.PASS);
+    static final Char SKIRK = new Char("Skirk", 5.7, genshin.Element.CRYO, genshin.Nation.OUTSIDE, genshin.Weapon.SWORD, true, true);
+
     //===SUMERU===
 
     static final Char COLLEI = new Char("Collei", 3.0, genshin.Element.DENTRO, genshin.Nation.SUMERU, genshin.Weapon.BOW, false, true);
