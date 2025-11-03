@@ -1,9 +1,9 @@
-wins=38
+wins=39
 winsAt1=0
 winsAt2=3
 winsAt3=13
-winsAt4=11
+winsAt4=12
 winsAt5=7
 winsAtMore=4
 quits=4
-totalGames=42
+totalGames=43
