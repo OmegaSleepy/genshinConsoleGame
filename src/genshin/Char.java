@@ -20,7 +20,7 @@ public enum Char {
     ROSALIA("Rosalia",1.4,CRYO,MONSTADT,POLEARM,false,true,new String[] {"Rozalia","Roza","Rosa"}),
     MIKA("Mika",3.5,CRYO,MONSTADT,POLEARM,false,false),
     DAHLIA("Dahlia",5.7,HYDRO,MONSTADT,SWORD,false,false),
-    VENTI("Venti",1.0,ANEMO,MONSTADT,BOW,true,true),
+    VENTI("Venti",1.0,ANEMO,MONSTADT,BOW,true,false),
     JEAN("Jean",1.0,ANEMO,MONSTADT,SWORD,true,true),
     MONA("Mona",1.0,HYDRO,MONSTADT,CATALYST,true,true),
     KLEE("Klee",1.0,PYRO,MONSTADT,CATALYST,true,true,new String[] {"Kle"}),
