@@ -66,7 +66,7 @@ public class Game {
 
         isFirstRound = true;
 
-        maxVersion = 6.5;
+        maxVersion = getMaxVersion();
         minVersion = 1.0;
 
         possibleElements.add(Element.DENTRO);
