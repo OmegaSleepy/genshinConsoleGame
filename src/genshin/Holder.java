@@ -1,5 +1,7 @@
 package genshin;
 
+import genshin.enums.Char;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -33,25 +35,22 @@ public class Holder {
         }
     }
 
-    static void sortByVersion(){
-        characters.sort(new Comparator<Char>() {
-            @Override
-            public int compare (Char o1, Char o2) {
-                if(o1.version>o2.version){
+    public static void sortByVersion (){
+        characters.sort((o1, o2) -> {
+            if(o1.version>o2.version){
+                return 1;
+            } if(o1.version<o2.version){
+                return -1;
+            }
+            int shorterCount = Math.min(o1.name.length(),o2.name.length());
+            for (int i = 0; i < shorterCount; i++) {
+                if(o1.name.charAt(i)>o2.name.charAt(i)){
                     return 1;
-                } if(o1.version<o2.version){
+                } else if (o1.name.charAt(i)<o2.name.charAt(i)) {
                     return -1;
                 }
-                int shorterCount = Math.min(o1.name.length(),o2.name.length());
-                for (int i = 0; i < shorterCount; i++) {
-                    if(o1.name.charAt(i)>o2.name.charAt(i)){
-                        return 1;
-                    } else if (o1.name.charAt(i)<o2.name.charAt(i)) {
-                        return -1;
-                    }
-                }
-                return 0;
             }
+            return 0;
         });
     }
 

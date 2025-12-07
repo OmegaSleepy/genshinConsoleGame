@@ -17,7 +17,7 @@ public class StatHandler {
     static int quits;
     static int totalGames;
 
-    static File stats = new File("src/genshin/stats.txt");
+    static File stats = new File("stats.txt");
 
 
     /*wins=0

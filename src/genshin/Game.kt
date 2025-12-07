@@ -7,7 +7,7 @@ val rand = genshin.util.Random(40)
 
 fun main() {
 
-    val text = File("src/genshin/stats.txt").readText()
+    val text = File("stats.txt").readText()
 
     val lines = text.split(" ")
 
